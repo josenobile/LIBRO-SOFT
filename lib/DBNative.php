@@ -243,6 +243,8 @@ class DBNative {
 	 * @param mixed $value The Value to escape
 	 */
 	public function quote($value) {
+		if($value === NULL)
+			return "NULL";
 		//$value = strip_tags($value);
 		$ovalue = $value;
 		if (get_magic_quotes_gpc())
