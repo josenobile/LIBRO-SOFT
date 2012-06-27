@@ -18,8 +18,15 @@ $(function() {
 		delay: 0
 	}).addClass("autocomplete");
 	
-    //Autocompletar de Area de Conocimiento
+    //Autocompletar de Autor
 	$("#id_autor").autocomplete("index.php?ac=libro&autoCompleteTerm=nombre",{
+		minChars: 1,
+		max: 1000,
+		delay: 0
+	}).addClass("autocomplete");
+	
+    //Autocompletar de Editorial
+	$("#id_editorial").autocomplete("index.php?ac=libro&autoCompleteTerm=editorial",{
 		minChars: 1,
 		max: 1000,
 		delay: 0
