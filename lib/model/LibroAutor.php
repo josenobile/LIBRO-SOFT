@@ -1,8 +1,8 @@
 <?PHP 
 class LibroAutor{
-	private $idLibro_Autor;
-	private $id_libro;
-	private $id_autor;
+	private $idLibroAutor;
+	private $idLibro;
+	private $idAutor;
 	protected $con;
 	public function __construct(){
 		$this->con = DBNative::get();
@@ -10,25 +10,25 @@ class LibroAutor{
 	//Getters
 
 	public function getId(){
-		return $this->idLibro_Autor;
+		return $this->idLibroAutor;
 	}	public function getNombreId(){
 		return "idLibro_Autor";
 	}
 	public function getIdLibroAutor(){
-		return $this->idLibro_Autor;
+		return $this->idLibroAutor;
 	}
 	public function getIdLibro(){
-		return $this->id_libro;
+		return $this->idLibro;
 	}
 	public function getIdAutor(){
-		return $this->id_autor;
+		return $this->idAutor;
 	}
 	public function getByLibro($id_libro){
 		return $this->listarObj(array("id_libro"=>$id_libro));
 	}
 	public function getLibro(){
 		$libro = new Libro($this->con);
-		$libro->cargarPorId($this->id_libro);
+		$libro->cargarPorId($this->idLibro);
 		return $libro;
 	}
 	public function getByAutor($id_autor){
@@ -36,49 +36,51 @@ class LibroAutor{
 	}
 	public function getAutor(){
 		$autor = new Autor($this->con);
-		$autor->cargarPorId($this->id_autor);
+		$autor->cargarPorId($this->idAutor);
 		return $autor;
 	}
 
 	//Setters
 
-	public function setIdLibro_Autor($idLibro_Autor){
-		$this->idLibro_Autor = $idLibro_Autor;
+	public function setIdLibroAutor($idLibroAutor){
+		$this->idLibroAutor = $idLibroAutor;
 	}
-	public function setId_libro($id_libro){
-		$this->id_libro = $id_libro;
+	public function setIdLibro($idLibro){
+		$this->idLibro = $idLibro;
 	}
-	public function setId_autor($id_autor){
-		$this->id_autor = $id_autor;
+	public function setIdAutor($idAutor){
+		$this->idAutor = $idAutor;
 	}
 	//LLena todos los atributos de la clase sacando los valores de un array
 	function setValues($array){
-		foreach($array as $key => $val)
+		foreach($array as $key => $val){
+			$key = lcfirst(str_replace(" ","",ucwords(str_replace("_"," ",$key))));
 			if(property_exists($this,$key))
 				$this->$key = $val;
+		}
 	}
 	
 	//Guarda o actualiza el objeto en la base de datos, la accion se determina por la clave primaria
 	public function save(){
-		if(empty($this->idLibro_Autor)){			
-			$this->idLibro_Autor = $this->con->autoInsert(array(
-			"id_libro" => $this->getId_libro(),
-			"id_autor" => $this->getId_autor(),
+		if(empty($this->idLibroAutor)){			
+			$this->idLibroAutor = $this->con->autoInsert(array(
+			"id_libro" => $this->idLibro,
+			"id_autor" => $this->idAutor,
 			),"libro_autor");
 			return;
 		}
 		return $this->con->autoUpdate(array(
-			"id_libro" => $this->getId_libro(),
-			"id_autor" => $this->getId_autor(),
+			"id_libro" => $this->idLibro,
+			"id_autor" => $this->idAutor,
 			),"libro_autor","idLibro_Autor=".$this->getId());
 	}
     
 	public function cargarPorId($idLibro_Autor){
 		if($idLibro_Autor>0){
 			$result = $this->con->query("SELECT * FROM `libro_autor`  WHERE idLibro_Autor=".$idLibro_Autor);
-			$this->idLibro_Autor = $result[0]['idLibro_Autor'];
-			$this->id_libro = $result[0]['id_libro'];
-			$this->id_autor = $result[0]['id_autor'];
+			$this->idLibroAutor = $result[0]['idLibro_Autor'];
+			$this->idLibro = $result[0]['id_libro'];
+			$this->idAutor = $result[0]['id_autor'];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){

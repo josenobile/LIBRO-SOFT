@@ -1,6 +1,6 @@
 <?PHP 
 class EstadoEjemplar{
-	private $idEstado_Ejemplar;
+	private $idEstadoEjemplar;
 	private $estado;
 	protected $con;
 	public function __construct(){
@@ -9,12 +9,12 @@ class EstadoEjemplar{
 	//Getters
 
 	public function getId(){
-		return $this->idEstado_Ejemplar;
+		return $this->idEstadoEjemplar;
 	}	public function getNombreId(){
 		return "idEstado_Ejemplar";
 	}
 	public function getIdEstadoEjemplar(){
-		return $this->idEstado_Ejemplar;
+		return $this->idEstadoEjemplar;
 	}
 	public function getEstado(){
 		return $this->estado;
@@ -22,36 +22,38 @@ class EstadoEjemplar{
 
 	//Setters
 
-	public function setIdEstado_Ejemplar($idEstado_Ejemplar){
-		$this->idEstado_Ejemplar = $idEstado_Ejemplar;
+	public function setIdEstadoEjemplar($idEstadoEjemplar){
+		$this->idEstadoEjemplar = $idEstadoEjemplar;
 	}
 	public function setEstado($estado){
 		$this->estado = $estado;
 	}
 	//LLena todos los atributos de la clase sacando los valores de un array
 	function setValues($array){
-		foreach($array as $key => $val)
+		foreach($array as $key => $val){
+			$key = lcfirst(str_replace(" ","",ucwords(str_replace("_"," ",$key))));
 			if(property_exists($this,$key))
 				$this->$key = $val;
+		}
 	}
 	
 	//Guarda o actualiza el objeto en la base de datos, la accion se determina por la clave primaria
 	public function save(){
-		if(empty($this->idEstado_Ejemplar)){			
-			$this->idEstado_Ejemplar = $this->con->autoInsert(array(
-			"estado" => $this->getEstado(),
+		if(empty($this->idEstadoEjemplar)){			
+			$this->idEstadoEjemplar = $this->con->autoInsert(array(
+			"estado" => $this->estado,
 			),"estado_ejemplar");
 			return;
 		}
 		return $this->con->autoUpdate(array(
-			"estado" => $this->getEstado(),
+			"estado" => $this->estado,
 			),"estado_ejemplar","idEstado_Ejemplar=".$this->getId());
 	}
     
 	public function cargarPorId($idEstado_Ejemplar){
 		if($idEstado_Ejemplar>0){
 			$result = $this->con->query("SELECT * FROM `estado_ejemplar`  WHERE idEstado_Ejemplar=".$idEstado_Ejemplar);
-			$this->idEstado_Ejemplar = $result[0]['idEstado_Ejemplar'];
+			$this->idEstadoEjemplar = $result[0]['idEstado_Ejemplar'];
 			$this->estado = $result[0]['estado'];
 		}
  	}

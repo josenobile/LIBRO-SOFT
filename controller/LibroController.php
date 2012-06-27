@@ -4,14 +4,32 @@ class LibroController {
 	private $aParams;
 	private $motorDePlantilas;
 
-	public function AreaController(sfTemplateEngine &$engine) {
+	public function LibroController(sfTemplateEngine &$engine) {
 		$this->libro = new LibroModel();
 		$this->aParams = Array();
 		$this->motorDePlantilas = $engine;
 	}
 	public function manejadorDeAcciones() {
+		if(@$_REQUEST["autoCompleteTerm"] != "") {
+			$term = $_GET['q'];
+			switch ( $_GET['autoCompleteTerm']){
+				
+				case "area":
+					$result = (new AreaModel())->listar(array($_REQUEST["autoCompleteTerm"]=>$term), $_REQUEST["autoCompleteTerm"], "0,".$_REQUEST["limit"],false, $fields = "DISTINCT ".$_REQUEST["autoCompleteTerm"]);
+					break;
+			}
+						
+			$aResp = array();
+			if(!is_array($result))
+				exit;
+			foreach($result as $row){
+				echo $row[$_REQUEST["autoCompleteTerm"]]."\r\n";
+			}
+			exit;
+		}
+		//Listar AJAX
 		if(@$_REQUEST['sEcho'] != ""){
-			die($this->libro->getPager(array("idLibro", "ISBN", "Titulo", "Año","Area"))->getJSON());
+			die($this->libro->getPager(array("idLibro", "ISBN", "Titulo", "Año", "Area"))->getJSON());
 		}
 		if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			$this->guardar($_POST["idLibro"]);
@@ -23,7 +41,6 @@ class LibroController {
 			$this->cargarPorId(intval($_GET["id"]));
 			die(json_encode($this->aParams["libro"]));
 		}
-		$this->consultar();
 		$this->mostarPlantilla();
 	}
 	private function guardar($id) {
@@ -50,19 +67,6 @@ class LibroController {
 		$this->aParams["message"] = "El registro fue eliminado";
 		$resp = json_encode(array("msg"=>$this->aParams["message"]));
 		die($resp);
-	}
-
-	private function consultar() {
-		$this->aParams["libros"] = array();
-		$libros = $this->libro->listarObj();
-		foreach ($libros as $libro) {
-			$this->aParams["libros"][] = array(
-			"idLibro" => $libro->getId(),
-				"ISBN" => $libro->getISBN(),
-				"Titulo" => $libro->getTitulo(),
-				"Año" => $libro->getAñoPublicación(),
-				"Area" => $libro->getArea()->getArea());
-		}
 	}
 
 	private function mostarPlantilla() {

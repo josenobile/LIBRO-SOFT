@@ -1,8 +1,8 @@
 <?PHP 
 class Trabajador{
 	private $idTrabajador;
-	private $Perfil_idPerfil;
-	private $Usuario_idUsuario;
+	private $perfilIdPerfil;
+	private $usuarioIdUsuario;
 	protected $con;
 	public function __construct(){
 		$this->con = DBNative::get();
@@ -18,17 +18,17 @@ class Trabajador{
 		return $this->idTrabajador;
 	}
 	public function getPerfilIdPerfil(){
-		return $this->Perfil_idPerfil;
+		return $this->perfilIdPerfil;
 	}
 	public function getUsuarioIdUsuario(){
-		return $this->Usuario_idUsuario;
+		return $this->usuarioIdUsuario;
 	}
 	public function getByPerfil($Perfil_idPerfil){
 		return $this->listarObj(array("Perfil_idPerfil"=>$Perfil_idPerfil));
 	}
 	public function getPerfil(){
 		$perfil = new Perfil($this->con);
-		$perfil->cargarPorId($this->Perfil_idPerfil);
+		$perfil->cargarPorId($this->perfilIdPerfil);
 		return $perfil;
 	}
 	public function getByUsuario($Usuario_idUsuario){
@@ -36,7 +36,7 @@ class Trabajador{
 	}
 	public function getUsuario(){
 		$usuario = new Usuario($this->con);
-		$usuario->cargarPorId($this->Usuario_idUsuario);
+		$usuario->cargarPorId($this->usuarioIdUsuario);
 		return $usuario;
 	}
 
@@ -45,31 +45,33 @@ class Trabajador{
 	public function setIdTrabajador($idTrabajador){
 		$this->idTrabajador = $idTrabajador;
 	}
-	public function setPerfil_idPerfil($Perfil_idPerfil){
-		$this->Perfil_idPerfil = $Perfil_idPerfil;
+	public function setPerfilIdPerfil($perfilIdPerfil){
+		$this->perfilIdPerfil = $perfilIdPerfil;
 	}
-	public function setUsuario_idUsuario($Usuario_idUsuario){
-		$this->Usuario_idUsuario = $Usuario_idUsuario;
+	public function setUsuarioIdUsuario($usuarioIdUsuario){
+		$this->usuarioIdUsuario = $usuarioIdUsuario;
 	}
 	//LLena todos los atributos de la clase sacando los valores de un array
 	function setValues($array){
-		foreach($array as $key => $val)
+		foreach($array as $key => $val){
+			$key = lcfirst(str_replace(" ","",ucwords(str_replace("_"," ",$key))));
 			if(property_exists($this,$key))
 				$this->$key = $val;
+		}
 	}
 	
 	//Guarda o actualiza el objeto en la base de datos, la accion se determina por la clave primaria
 	public function save(){
 		if(empty($this->idTrabajador)){			
 			$this->idTrabajador = $this->con->autoInsert(array(
-			"Perfil_idPerfil" => $this->getPerfil_idPerfil(),
-			"Usuario_idUsuario" => $this->getUsuario_idUsuario(),
+			"Perfil_idPerfil" => $this->perfilIdPerfil,
+			"Usuario_idUsuario" => $this->usuarioIdUsuario,
 			),"trabajador");
 			return;
 		}
 		return $this->con->autoUpdate(array(
-			"Perfil_idPerfil" => $this->getPerfil_idPerfil(),
-			"Usuario_idUsuario" => $this->getUsuario_idUsuario(),
+			"Perfil_idPerfil" => $this->perfilIdPerfil,
+			"Usuario_idUsuario" => $this->usuarioIdUsuario,
 			),"trabajador","idTrabajador=".$this->getId());
 	}
     
@@ -77,8 +79,8 @@ class Trabajador{
 		if($idTrabajador>0){
 			$result = $this->con->query("SELECT * FROM `trabajador`  WHERE idTrabajador=".$idTrabajador);
 			$this->idTrabajador = $result[0]['idTrabajador'];
-			$this->Perfil_idPerfil = $result[0]['Perfil_idPerfil'];
-			$this->Usuario_idUsuario = $result[0]['Usuario_idUsuario'];
+			$this->perfilIdPerfil = $result[0]['Perfil_idPerfil'];
+			$this->usuarioIdUsuario = $result[0]['Usuario_idUsuario'];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){

@@ -1,7 +1,7 @@
 <?PHP 
 class Usuario{
 	private $idUsuario;
-	private $id_tipo_identificacion;
+	private $idTipoIdentificacion;
 	private $nombres;
 	private $apellidos;
 	private $identificacion;
@@ -24,7 +24,7 @@ class Usuario{
 		return $this->idUsuario;
 	}
 	public function getIdTipoIdentificacion(){
-		return $this->id_tipo_identificacion;
+		return $this->idTipoIdentificacion;
 	}
 	public function getNombres(){
 		return $this->nombres;
@@ -52,7 +52,7 @@ class Usuario{
 	}
 	public function getTipoIdentificación(){
 		$tipo_identificación = new TipoIdentificación($this->con);
-		$tipo_identificación->cargarPorId($this->id_tipo_identificacion);
+		$tipo_identificación->cargarPorId($this->idTipoIdentificacion);
 		return $tipo_identificación;
 	}
 
@@ -61,8 +61,8 @@ class Usuario{
 	public function setIdUsuario($idUsuario){
 		$this->idUsuario = $idUsuario;
 	}
-	public function setId_tipo_identificacion($id_tipo_identificacion){
-		$this->id_tipo_identificacion = $id_tipo_identificacion;
+	public function setIdTipoIdentificacion($idTipoIdentificacion){
+		$this->idTipoIdentificacion = $idTipoIdentificacion;
 	}
 	public function setNombres($nombres){
 		$this->nombres = $nombres;
@@ -87,35 +87,37 @@ class Usuario{
 	}
 	//LLena todos los atributos de la clase sacando los valores de un array
 	function setValues($array){
-		foreach($array as $key => $val)
+		foreach($array as $key => $val){
+			$key = lcfirst(str_replace(" ","",ucwords(str_replace("_"," ",$key))));
 			if(property_exists($this,$key))
 				$this->$key = $val;
+		}
 	}
 	
 	//Guarda o actualiza el objeto en la base de datos, la accion se determina por la clave primaria
 	public function save(){
 		if(empty($this->idUsuario)){			
 			$this->idUsuario = $this->con->autoInsert(array(
-			"id_tipo_identificacion" => $this->getId_tipo_identificacion(),
-			"nombres" => $this->getNombres(),
-			"apellidos" => $this->getApellidos(),
-			"identificacion" => $this->getIdentificacion(),
-			"direccion" => $this->getDireccion(),
-			"telefono" => $this->getTelefono(),
-			"email" => $this->getEmail(),
-			"universidad" => $this->getUniversidad(),
+			"id_tipo_identificacion" => $this->idTipoIdentificacion,
+			"nombres" => $this->nombres,
+			"apellidos" => $this->apellidos,
+			"identificacion" => $this->identificacion,
+			"direccion" => $this->direccion,
+			"telefono" => $this->telefono,
+			"email" => $this->email,
+			"universidad" => $this->universidad,
 			),"usuario");
 			return;
 		}
 		return $this->con->autoUpdate(array(
-			"id_tipo_identificacion" => $this->getId_tipo_identificacion(),
-			"nombres" => $this->getNombres(),
-			"apellidos" => $this->getApellidos(),
-			"identificacion" => $this->getIdentificacion(),
-			"direccion" => $this->getDireccion(),
-			"telefono" => $this->getTelefono(),
-			"email" => $this->getEmail(),
-			"universidad" => $this->getUniversidad(),
+			"id_tipo_identificacion" => $this->idTipoIdentificacion,
+			"nombres" => $this->nombres,
+			"apellidos" => $this->apellidos,
+			"identificacion" => $this->identificacion,
+			"direccion" => $this->direccion,
+			"telefono" => $this->telefono,
+			"email" => $this->email,
+			"universidad" => $this->universidad,
 			),"usuario","idUsuario=".$this->getId());
 	}
     
@@ -123,7 +125,7 @@ class Usuario{
 		if($idUsuario>0){
 			$result = $this->con->query("SELECT * FROM `usuario`  WHERE idUsuario=".$idUsuario);
 			$this->idUsuario = $result[0]['idUsuario'];
-			$this->id_tipo_identificacion = $result[0]['id_tipo_identificacion'];
+			$this->idTipoIdentificacion = $result[0]['id_tipo_identificacion'];
 			$this->nombres = $result[0]['nombres'];
 			$this->apellidos = $result[0]['apellidos'];
 			$this->identificacion = $result[0]['identificacion'];

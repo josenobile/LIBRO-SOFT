@@ -3,7 +3,7 @@ class Editorial{
 	private $idEditorial;
 	private $editorial;
 	private $codigo;
-	private $pais_origen;
+	private $paisOrigen;
 	protected $con;
 	public function __construct(){
 		$this->con = DBNative::get();
@@ -25,7 +25,7 @@ class Editorial{
 		return $this->codigo;
 	}
 	public function getPaisOrigen(){
-		return $this->pais_origen;
+		return $this->paisOrigen;
 	}
 
 	//Setters
@@ -39,30 +39,32 @@ class Editorial{
 	public function setCodigo($codigo){
 		$this->codigo = $codigo;
 	}
-	public function setPais_origen($pais_origen){
-		$this->pais_origen = $pais_origen;
+	public function setPaisOrigen($paisOrigen){
+		$this->paisOrigen = $paisOrigen;
 	}
 	//LLena todos los atributos de la clase sacando los valores de un array
 	function setValues($array){
-		foreach($array as $key => $val)
+		foreach($array as $key => $val){
+			$key = lcfirst(str_replace(" ","",ucwords(str_replace("_"," ",$key))));
 			if(property_exists($this,$key))
 				$this->$key = $val;
+		}
 	}
 	
 	//Guarda o actualiza el objeto en la base de datos, la accion se determina por la clave primaria
 	public function save(){
 		if(empty($this->idEditorial)){			
 			$this->idEditorial = $this->con->autoInsert(array(
-			"editorial" => $this->getEditorial(),
-			"codigo" => $this->getCodigo(),
-			"pais_origen" => $this->getPais_origen(),
+			"editorial" => $this->editorial,
+			"codigo" => $this->codigo,
+			"pais_origen" => $this->paisOrigen,
 			),"editorial");
 			return;
 		}
 		return $this->con->autoUpdate(array(
-			"editorial" => $this->getEditorial(),
-			"codigo" => $this->getCodigo(),
-			"pais_origen" => $this->getPais_origen(),
+			"editorial" => $this->editorial,
+			"codigo" => $this->codigo,
+			"pais_origen" => $this->paisOrigen,
 			),"editorial","idEditorial=".$this->getId());
 	}
     
@@ -72,7 +74,7 @@ class Editorial{
 			$this->idEditorial = $result[0]['idEditorial'];
 			$this->editorial = $result[0]['editorial'];
 			$this->codigo = $result[0]['codigo'];
-			$this->pais_origen = $result[0]['pais_origen'];
+			$this->paisOrigen = $result[0]['pais_origen'];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){

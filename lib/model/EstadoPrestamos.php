@@ -1,6 +1,6 @@
 <?PHP 
 class EstadoPrestamos{
-	private $idEstados_Prestamos;
+	private $idEstadosPrestamos;
 	private $estado;
 	protected $con;
 	public function __construct(){
@@ -9,12 +9,12 @@ class EstadoPrestamos{
 	//Getters
 
 	public function getId(){
-		return $this->idEstados_Prestamos;
+		return $this->idEstadosPrestamos;
 	}	public function getNombreId(){
 		return "idEstados_Prestamos";
 	}
 	public function getIdEstadosPrestamos(){
-		return $this->idEstados_Prestamos;
+		return $this->idEstadosPrestamos;
 	}
 	public function getEstado(){
 		return $this->estado;
@@ -22,36 +22,38 @@ class EstadoPrestamos{
 
 	//Setters
 
-	public function setIdEstados_Prestamos($idEstados_Prestamos){
-		$this->idEstados_Prestamos = $idEstados_Prestamos;
+	public function setIdEstadosPrestamos($idEstadosPrestamos){
+		$this->idEstadosPrestamos = $idEstadosPrestamos;
 	}
 	public function setEstado($estado){
 		$this->estado = $estado;
 	}
 	//LLena todos los atributos de la clase sacando los valores de un array
 	function setValues($array){
-		foreach($array as $key => $val)
+		foreach($array as $key => $val){
+			$key = lcfirst(str_replace(" ","",ucwords(str_replace("_"," ",$key))));
 			if(property_exists($this,$key))
 				$this->$key = $val;
+		}
 	}
 	
 	//Guarda o actualiza el objeto en la base de datos, la accion se determina por la clave primaria
 	public function save(){
-		if(empty($this->idEstados_Prestamos)){			
-			$this->idEstados_Prestamos = $this->con->autoInsert(array(
-			"estado" => $this->getEstado(),
+		if(empty($this->idEstadosPrestamos)){			
+			$this->idEstadosPrestamos = $this->con->autoInsert(array(
+			"estado" => $this->estado,
 			),"estado_prestamos");
 			return;
 		}
 		return $this->con->autoUpdate(array(
-			"estado" => $this->getEstado(),
+			"estado" => $this->estado,
 			),"estado_prestamos","idEstados_Prestamos=".$this->getId());
 	}
     
 	public function cargarPorId($idEstados_Prestamos){
 		if($idEstados_Prestamos>0){
 			$result = $this->con->query("SELECT * FROM `estado_prestamos`  WHERE idEstados_Prestamos=".$idEstados_Prestamos);
-			$this->idEstados_Prestamos = $result[0]['idEstados_Prestamos'];
+			$this->idEstadosPrestamos = $result[0]['idEstados_Prestamos'];
 			$this->estado = $result[0]['estado'];
 		}
  	}

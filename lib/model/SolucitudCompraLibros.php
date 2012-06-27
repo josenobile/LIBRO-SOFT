@@ -1,12 +1,12 @@
 <?PHP 
 class SolucitudCompraLibros{
-	private $idSolucitud_Compra_Libros;
-	private $id_usuario;
+	private $idSolucitudCompraLibros;
+	private $idUsuario;
 	private $estado;
 	private $isbn;
 	private $descripcion;
 	private $titulo;
-	private $fecha_solicitud;
+	private $fechaSolicitud;
 	protected $con;
 	public function __construct(){
 		$this->con = DBNative::get();
@@ -14,15 +14,15 @@ class SolucitudCompraLibros{
 	//Getters
 
 	public function getId(){
-		return $this->idSolucitud_Compra_Libros;
+		return $this->idSolucitudCompraLibros;
 	}	public function getNombreId(){
 		return "idSolucitud_Compra_Libros";
 	}
 	public function getIdSolucitudCompraLibros(){
-		return $this->idSolucitud_Compra_Libros;
+		return $this->idSolucitudCompraLibros;
 	}
 	public function getIdUsuario(){
-		return $this->id_usuario;
+		return $this->idUsuario;
 	}
 	public function getEstado(){
 		return $this->estado;
@@ -37,14 +37,14 @@ class SolucitudCompraLibros{
 		return $this->titulo;
 	}
 	public function getFechaSolicitud(){
-		return $this->fecha_solicitud;
+		return $this->fechaSolicitud;
 	}
 	public function getByUsuario($id_usuario){
 		return $this->listarObj(array("id_usuario"=>$id_usuario));
 	}
 	public function getUsuario(){
 		$usuario = new Usuario($this->con);
-		$usuario->cargarPorId($this->id_usuario);
+		$usuario->cargarPorId($this->idUsuario);
 		return $usuario;
 	}
 	public function getByEstadoSolicitudCompra($estado){
@@ -58,11 +58,11 @@ class SolucitudCompraLibros{
 
 	//Setters
 
-	public function setIdSolucitud_Compra_Libros($idSolucitud_Compra_Libros){
-		$this->idSolucitud_Compra_Libros = $idSolucitud_Compra_Libros;
+	public function setIdSolucitudCompraLibros($idSolucitudCompraLibros){
+		$this->idSolucitudCompraLibros = $idSolucitudCompraLibros;
 	}
-	public function setId_usuario($id_usuario){
-		$this->id_usuario = $id_usuario;
+	public function setIdUsuario($idUsuario){
+		$this->idUsuario = $idUsuario;
 	}
 	public function setEstado($estado){
 		$this->estado = $estado;
@@ -76,49 +76,51 @@ class SolucitudCompraLibros{
 	public function setTitulo($titulo){
 		$this->titulo = $titulo;
 	}
-	public function setFecha_solicitud($fecha_solicitud){
-		$this->fecha_solicitud = $fecha_solicitud;
+	public function setFechaSolicitud($fechaSolicitud){
+		$this->fechaSolicitud = $fechaSolicitud;
 	}
 	//LLena todos los atributos de la clase sacando los valores de un array
 	function setValues($array){
-		foreach($array as $key => $val)
+		foreach($array as $key => $val){
+			$key = lcfirst(str_replace(" ","",ucwords(str_replace("_"," ",$key))));
 			if(property_exists($this,$key))
 				$this->$key = $val;
+		}
 	}
 	
 	//Guarda o actualiza el objeto en la base de datos, la accion se determina por la clave primaria
 	public function save(){
-		if(empty($this->idSolucitud_Compra_Libros)){			
-			$this->idSolucitud_Compra_Libros = $this->con->autoInsert(array(
-			"id_usuario" => $this->getId_usuario(),
-			"estado" => $this->getEstado(),
-			"isbn" => $this->getIsbn(),
-			"descripcion" => $this->getDescripcion(),
-			"titulo" => $this->getTitulo(),
-			"fecha_solicitud" => $this->getFecha_solicitud(),
+		if(empty($this->idSolucitudCompraLibros)){			
+			$this->idSolucitudCompraLibros = $this->con->autoInsert(array(
+			"id_usuario" => $this->idUsuario,
+			"estado" => $this->estado,
+			"isbn" => $this->isbn,
+			"descripcion" => $this->descripcion,
+			"titulo" => $this->titulo,
+			"fecha_solicitud" => $this->fechaSolicitud,
 			),"solucitud_compra_libros");
 			return;
 		}
 		return $this->con->autoUpdate(array(
-			"id_usuario" => $this->getId_usuario(),
-			"estado" => $this->getEstado(),
-			"isbn" => $this->getIsbn(),
-			"descripcion" => $this->getDescripcion(),
-			"titulo" => $this->getTitulo(),
-			"fecha_solicitud" => $this->getFecha_solicitud(),
+			"id_usuario" => $this->idUsuario,
+			"estado" => $this->estado,
+			"isbn" => $this->isbn,
+			"descripcion" => $this->descripcion,
+			"titulo" => $this->titulo,
+			"fecha_solicitud" => $this->fechaSolicitud,
 			),"solucitud_compra_libros","idSolucitud_Compra_Libros=".$this->getId());
 	}
     
 	public function cargarPorId($idSolucitud_Compra_Libros){
 		if($idSolucitud_Compra_Libros>0){
 			$result = $this->con->query("SELECT * FROM `solucitud_compra_libros`  WHERE idSolucitud_Compra_Libros=".$idSolucitud_Compra_Libros);
-			$this->idSolucitud_Compra_Libros = $result[0]['idSolucitud_Compra_Libros'];
-			$this->id_usuario = $result[0]['id_usuario'];
+			$this->idSolucitudCompraLibros = $result[0]['idSolucitud_Compra_Libros'];
+			$this->idUsuario = $result[0]['id_usuario'];
 			$this->estado = $result[0]['estado'];
 			$this->isbn = $result[0]['isbn'];
 			$this->descripcion = $result[0]['descripcion'];
 			$this->titulo = $result[0]['titulo'];
-			$this->fecha_solicitud = $result[0]['fecha_solicitud'];
+			$this->fechaSolicitud = $result[0]['fecha_solicitud'];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){

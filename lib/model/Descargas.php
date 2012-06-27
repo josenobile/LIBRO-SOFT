@@ -2,8 +2,8 @@
 class Descargas{
 	private $idDescargas;
 	private $contador;
-	private $Usuario_idUsuario;
-	private $Libro_idLibro;
+	private $usuarioIdUsuario;
+	private $libroIdLibro;
 	private $fecha;
 	protected $con;
 	public function __construct(){
@@ -23,10 +23,10 @@ class Descargas{
 		return $this->contador;
 	}
 	public function getUsuarioIdUsuario(){
-		return $this->Usuario_idUsuario;
+		return $this->usuarioIdUsuario;
 	}
 	public function getLibroIdLibro(){
-		return $this->Libro_idLibro;
+		return $this->libroIdLibro;
 	}
 	public function getFecha(){
 		return $this->fecha;
@@ -36,7 +36,7 @@ class Descargas{
 	}
 	public function getUsuario(){
 		$usuario = new Usuario($this->con);
-		$usuario->cargarPorId($this->Usuario_idUsuario);
+		$usuario->cargarPorId($this->usuarioIdUsuario);
 		return $usuario;
 	}
 	public function getByLibro($Libro_idLibro){
@@ -44,7 +44,7 @@ class Descargas{
 	}
 	public function getLibro(){
 		$libro = new Libro($this->con);
-		$libro->cargarPorId($this->Libro_idLibro);
+		$libro->cargarPorId($this->libroIdLibro);
 		return $libro;
 	}
 
@@ -56,38 +56,40 @@ class Descargas{
 	public function setContador($contador){
 		$this->contador = $contador;
 	}
-	public function setUsuario_idUsuario($Usuario_idUsuario){
-		$this->Usuario_idUsuario = $Usuario_idUsuario;
+	public function setUsuarioIdUsuario($usuarioIdUsuario){
+		$this->usuarioIdUsuario = $usuarioIdUsuario;
 	}
-	public function setLibro_idLibro($Libro_idLibro){
-		$this->Libro_idLibro = $Libro_idLibro;
+	public function setLibroIdLibro($libroIdLibro){
+		$this->libroIdLibro = $libroIdLibro;
 	}
 	public function setFecha($fecha){
 		$this->fecha = $fecha;
 	}
 	//LLena todos los atributos de la clase sacando los valores de un array
 	function setValues($array){
-		foreach($array as $key => $val)
+		foreach($array as $key => $val){
+			$key = lcfirst(str_replace(" ","",ucwords(str_replace("_"," ",$key))));
 			if(property_exists($this,$key))
 				$this->$key = $val;
+		}
 	}
 	
 	//Guarda o actualiza el objeto en la base de datos, la accion se determina por la clave primaria
 	public function save(){
 		if(empty($this->idDescargas)){			
 			$this->idDescargas = $this->con->autoInsert(array(
-			"contador" => $this->getContador(),
-			"Usuario_idUsuario" => $this->getUsuario_idUsuario(),
-			"Libro_idLibro" => $this->getLibro_idLibro(),
-			"fecha" => $this->getFecha(),
+			"contador" => $this->contador,
+			"Usuario_idUsuario" => $this->usuarioIdUsuario,
+			"Libro_idLibro" => $this->libroIdLibro,
+			"fecha" => $this->fecha,
 			),"descargas");
 			return;
 		}
 		return $this->con->autoUpdate(array(
-			"contador" => $this->getContador(),
-			"Usuario_idUsuario" => $this->getUsuario_idUsuario(),
-			"Libro_idLibro" => $this->getLibro_idLibro(),
-			"fecha" => $this->getFecha(),
+			"contador" => $this->contador,
+			"Usuario_idUsuario" => $this->usuarioIdUsuario,
+			"Libro_idLibro" => $this->libroIdLibro,
+			"fecha" => $this->fecha,
 			),"descargas","idDescargas=".$this->getId());
 	}
     
@@ -96,8 +98,8 @@ class Descargas{
 			$result = $this->con->query("SELECT * FROM `descargas`  WHERE idDescargas=".$idDescargas);
 			$this->idDescargas = $result[0]['idDescargas'];
 			$this->contador = $result[0]['contador'];
-			$this->Usuario_idUsuario = $result[0]['Usuario_idUsuario'];
-			$this->Libro_idLibro = $result[0]['Libro_idLibro'];
+			$this->usuarioIdUsuario = $result[0]['Usuario_idUsuario'];
+			$this->libroIdLibro = $result[0]['Libro_idLibro'];
 			$this->fecha = $result[0]['fecha'];
 		}
  	}

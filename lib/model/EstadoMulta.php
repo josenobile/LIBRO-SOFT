@@ -1,6 +1,6 @@
 <?PHP 
 class EstadoMulta{
-	private $idEstado_Multa;
+	private $idEstadoMulta;
 	private $estado;
 	protected $con;
 	public function __construct(){
@@ -9,12 +9,12 @@ class EstadoMulta{
 	//Getters
 
 	public function getId(){
-		return $this->idEstado_Multa;
+		return $this->idEstadoMulta;
 	}	public function getNombreId(){
 		return "idEstado_Multa";
 	}
 	public function getIdEstadoMulta(){
-		return $this->idEstado_Multa;
+		return $this->idEstadoMulta;
 	}
 	public function getEstado(){
 		return $this->estado;
@@ -22,36 +22,38 @@ class EstadoMulta{
 
 	//Setters
 
-	public function setIdEstado_Multa($idEstado_Multa){
-		$this->idEstado_Multa = $idEstado_Multa;
+	public function setIdEstadoMulta($idEstadoMulta){
+		$this->idEstadoMulta = $idEstadoMulta;
 	}
 	public function setEstado($estado){
 		$this->estado = $estado;
 	}
 	//LLena todos los atributos de la clase sacando los valores de un array
 	function setValues($array){
-		foreach($array as $key => $val)
+		foreach($array as $key => $val){
+			$key = lcfirst(str_replace(" ","",ucwords(str_replace("_"," ",$key))));
 			if(property_exists($this,$key))
 				$this->$key = $val;
+		}
 	}
 	
 	//Guarda o actualiza el objeto en la base de datos, la accion se determina por la clave primaria
 	public function save(){
-		if(empty($this->idEstado_Multa)){			
-			$this->idEstado_Multa = $this->con->autoInsert(array(
-			"estado" => $this->getEstado(),
+		if(empty($this->idEstadoMulta)){			
+			$this->idEstadoMulta = $this->con->autoInsert(array(
+			"estado" => $this->estado,
 			),"estado_multa");
 			return;
 		}
 		return $this->con->autoUpdate(array(
-			"estado" => $this->getEstado(),
+			"estado" => $this->estado,
 			),"estado_multa","idEstado_Multa=".$this->getId());
 	}
     
 	public function cargarPorId($idEstado_Multa){
 		if($idEstado_Multa>0){
 			$result = $this->con->query("SELECT * FROM `estado_multa`  WHERE idEstado_Multa=".$idEstado_Multa);
-			$this->idEstado_Multa = $result[0]['idEstado_Multa'];
+			$this->idEstadoMulta = $result[0]['idEstado_Multa'];
 			$this->estado = $result[0]['estado'];
 		}
  	}

@@ -1,11 +1,11 @@
 <?PHP 
 class Multa{
 	private $idMulta;
-	private $id_ejemplar;
-	private $id_prestamo;
-	private $id_estado;
+	private $idEjemplar;
+	private $idPrestamo;
+	private $idEstado;
 	private $multa;
-	private $fecha_pago;
+	private $fechaPago;
 	protected $con;
 	public function __construct(){
 		$this->con = DBNative::get();
@@ -21,26 +21,26 @@ class Multa{
 		return $this->idMulta;
 	}
 	public function getIdEjemplar(){
-		return $this->id_ejemplar;
+		return $this->idEjemplar;
 	}
 	public function getIdPrestamo(){
-		return $this->id_prestamo;
+		return $this->idPrestamo;
 	}
 	public function getIdEstado(){
-		return $this->id_estado;
+		return $this->idEstado;
 	}
 	public function getMulta(){
 		return $this->multa;
 	}
 	public function getFechaPago(){
-		return $this->fecha_pago;
+		return $this->fechaPago;
 	}
 	public function getByEjemplar($id_ejemplar){
 		return $this->listarObj(array("id_ejemplar"=>$id_ejemplar));
 	}
 	public function getEjemplar(){
 		$ejemplar = new Ejemplar($this->con);
-		$ejemplar->cargarPorId($this->id_ejemplar);
+		$ejemplar->cargarPorId($this->idEjemplar);
 		return $ejemplar;
 	}
 	public function getByPrestamo($id_prestamo){
@@ -48,7 +48,7 @@ class Multa{
 	}
 	public function getPrestamo(){
 		$prestamo = new Prestamo($this->con);
-		$prestamo->cargarPorId($this->id_prestamo);
+		$prestamo->cargarPorId($this->idPrestamo);
 		return $prestamo;
 	}
 	public function getByEstadoMulta($id_estado){
@@ -56,7 +56,7 @@ class Multa{
 	}
 	public function getEstadoMulta(){
 		$estado_multa = new EstadoMulta($this->con);
-		$estado_multa->cargarPorId($this->id_estado);
+		$estado_multa->cargarPorId($this->idEstado);
 		return $estado_multa;
 	}
 
@@ -65,46 +65,48 @@ class Multa{
 	public function setIdMulta($idMulta){
 		$this->idMulta = $idMulta;
 	}
-	public function setId_ejemplar($id_ejemplar){
-		$this->id_ejemplar = $id_ejemplar;
+	public function setIdEjemplar($idEjemplar){
+		$this->idEjemplar = $idEjemplar;
 	}
-	public function setId_prestamo($id_prestamo){
-		$this->id_prestamo = $id_prestamo;
+	public function setIdPrestamo($idPrestamo){
+		$this->idPrestamo = $idPrestamo;
 	}
-	public function setId_estado($id_estado){
-		$this->id_estado = $id_estado;
+	public function setIdEstado($idEstado){
+		$this->idEstado = $idEstado;
 	}
 	public function setMulta($multa){
 		$this->multa = $multa;
 	}
-	public function setFecha_pago($fecha_pago){
-		$this->fecha_pago = $fecha_pago;
+	public function setFechaPago($fechaPago){
+		$this->fechaPago = $fechaPago;
 	}
 	//LLena todos los atributos de la clase sacando los valores de un array
 	function setValues($array){
-		foreach($array as $key => $val)
+		foreach($array as $key => $val){
+			$key = lcfirst(str_replace(" ","",ucwords(str_replace("_"," ",$key))));
 			if(property_exists($this,$key))
 				$this->$key = $val;
+		}
 	}
 	
 	//Guarda o actualiza el objeto en la base de datos, la accion se determina por la clave primaria
 	public function save(){
 		if(empty($this->idMulta)){			
 			$this->idMulta = $this->con->autoInsert(array(
-			"id_ejemplar" => $this->getId_ejemplar(),
-			"id_prestamo" => $this->getId_prestamo(),
-			"id_estado" => $this->getId_estado(),
-			"multa" => $this->getMulta(),
-			"fecha_pago" => $this->getFecha_pago(),
+			"id_ejemplar" => $this->idEjemplar,
+			"id_prestamo" => $this->idPrestamo,
+			"id_estado" => $this->idEstado,
+			"multa" => $this->multa,
+			"fecha_pago" => $this->fechaPago,
 			),"multa");
 			return;
 		}
 		return $this->con->autoUpdate(array(
-			"id_ejemplar" => $this->getId_ejemplar(),
-			"id_prestamo" => $this->getId_prestamo(),
-			"id_estado" => $this->getId_estado(),
-			"multa" => $this->getMulta(),
-			"fecha_pago" => $this->getFecha_pago(),
+			"id_ejemplar" => $this->idEjemplar,
+			"id_prestamo" => $this->idPrestamo,
+			"id_estado" => $this->idEstado,
+			"multa" => $this->multa,
+			"fecha_pago" => $this->fechaPago,
 			),"multa","idMulta=".$this->getId());
 	}
     
@@ -112,11 +114,11 @@ class Multa{
 		if($idMulta>0){
 			$result = $this->con->query("SELECT * FROM `multa`  WHERE idMulta=".$idMulta);
 			$this->idMulta = $result[0]['idMulta'];
-			$this->id_ejemplar = $result[0]['id_ejemplar'];
-			$this->id_prestamo = $result[0]['id_prestamo'];
-			$this->id_estado = $result[0]['id_estado'];
+			$this->idEjemplar = $result[0]['id_ejemplar'];
+			$this->idPrestamo = $result[0]['id_prestamo'];
+			$this->idEstado = $result[0]['id_estado'];
 			$this->multa = $result[0]['multa'];
-			$this->fecha_pago = $result[0]['fecha_pago'];
+			$this->fechaPago = $result[0]['fecha_pago'];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){

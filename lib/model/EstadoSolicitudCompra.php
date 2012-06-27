@@ -1,6 +1,6 @@
 <?PHP 
 class EstadoSolicitudCompra{
-	private $idEstado_Solicitud_Compra;
+	private $idEstadoSolicitudCompra;
 	private $estado;
 	protected $con;
 	public function __construct(){
@@ -9,12 +9,12 @@ class EstadoSolicitudCompra{
 	//Getters
 
 	public function getId(){
-		return $this->idEstado_Solicitud_Compra;
+		return $this->idEstadoSolicitudCompra;
 	}	public function getNombreId(){
 		return "idEstado_Solicitud_Compra";
 	}
 	public function getIdEstadoSolicitudCompra(){
-		return $this->idEstado_Solicitud_Compra;
+		return $this->idEstadoSolicitudCompra;
 	}
 	public function getEstado(){
 		return $this->estado;
@@ -22,36 +22,38 @@ class EstadoSolicitudCompra{
 
 	//Setters
 
-	public function setIdEstado_Solicitud_Compra($idEstado_Solicitud_Compra){
-		$this->idEstado_Solicitud_Compra = $idEstado_Solicitud_Compra;
+	public function setIdEstadoSolicitudCompra($idEstadoSolicitudCompra){
+		$this->idEstadoSolicitudCompra = $idEstadoSolicitudCompra;
 	}
 	public function setEstado($estado){
 		$this->estado = $estado;
 	}
 	//LLena todos los atributos de la clase sacando los valores de un array
 	function setValues($array){
-		foreach($array as $key => $val)
+		foreach($array as $key => $val){
+			$key = lcfirst(str_replace(" ","",ucwords(str_replace("_"," ",$key))));
 			if(property_exists($this,$key))
 				$this->$key = $val;
+		}
 	}
 	
 	//Guarda o actualiza el objeto en la base de datos, la accion se determina por la clave primaria
 	public function save(){
-		if(empty($this->idEstado_Solicitud_Compra)){			
-			$this->idEstado_Solicitud_Compra = $this->con->autoInsert(array(
-			"estado" => $this->getEstado(),
+		if(empty($this->idEstadoSolicitudCompra)){			
+			$this->idEstadoSolicitudCompra = $this->con->autoInsert(array(
+			"estado" => $this->estado,
 			),"estado_solicitud_compra");
 			return;
 		}
 		return $this->con->autoUpdate(array(
-			"estado" => $this->getEstado(),
+			"estado" => $this->estado,
 			),"estado_solicitud_compra","idEstado_Solicitud_Compra=".$this->getId());
 	}
     
 	public function cargarPorId($idEstado_Solicitud_Compra){
 		if($idEstado_Solicitud_Compra>0){
 			$result = $this->con->query("SELECT * FROM `estado_solicitud_compra`  WHERE idEstado_Solicitud_Compra=".$idEstado_Solicitud_Compra);
-			$this->idEstado_Solicitud_Compra = $result[0]['idEstado_Solicitud_Compra'];
+			$this->idEstadoSolicitudCompra = $result[0]['idEstado_Solicitud_Compra'];
 			$this->estado = $result[0]['estado'];
 		}
  	}

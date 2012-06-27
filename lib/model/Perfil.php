@@ -30,21 +30,23 @@ class Perfil{
 	}
 	//LLena todos los atributos de la clase sacando los valores de un array
 	function setValues($array){
-		foreach($array as $key => $val)
+		foreach($array as $key => $val){
+			$key = lcfirst(str_replace(" ","",ucwords(str_replace("_"," ",$key))));
 			if(property_exists($this,$key))
 				$this->$key = $val;
+		}
 	}
 	
 	//Guarda o actualiza el objeto en la base de datos, la accion se determina por la clave primaria
 	public function save(){
 		if(empty($this->idPerfil)){			
 			$this->idPerfil = $this->con->autoInsert(array(
-			"nombre" => $this->getNombre(),
+			"nombre" => $this->nombre,
 			),"perfil");
 			return;
 		}
 		return $this->con->autoUpdate(array(
-			"nombre" => $this->getNombre(),
+			"nombre" => $this->nombre,
 			),"perfil","idPerfil=".$this->getId());
 	}
     
