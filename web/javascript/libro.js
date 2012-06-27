@@ -18,7 +18,8 @@ $(function() {
 		delay: 0
 	}).addClass("autocomplete");
 	
-    //Autocompletar de Area de Conocimiento
+<<<<<<< HEAD
+    //Autocompletar de Autor
 	$("#autoautor").autocomplete("index.php?ac=libro&autoCompleteTerm=nombre",{
 		minChars: 1,
 		max: 1000,
@@ -26,6 +27,14 @@ $(function() {
 	}).addClass("autocomplete").bind("result", function(){
 		
 	});
+	
+    //Autocompletar de Editorial
+	$("#id_editorial").autocomplete("index.php?ac=libro&autoCompleteTerm=editorial",{
+		minChars: 1,
+		max: 1000,
+		delay: 0
+	}).addClass("autocomplete");
+
     
     // Validar los campos del formulario, enviarlo por ajax y actulizar la
     // tabla!!

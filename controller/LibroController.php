@@ -24,6 +24,10 @@ class LibroController {
                 case "nombre":
                     $result = (new AutorModel())->listar(array("primer_apellido" => $term), "primer_apellido", "0," . $_REQUEST["limit"], false, $fields = "DISTINCT CONCAT(primer_apellido, ' ', segundo_apellido, ', ', primer_nombre, ' ', segundo_nombre) as nombre");
                     break;
+                    
+                    case "editorial":
+                    	$result = (new EditorialModel())->listar(array($_REQUEST["autoCompleteTerm"] => $term), $_REQUEST["autoCompleteTerm"], "0," . $_REQUEST["limit"], false, $fields = "DISTINCT " . $_REQUEST["autoCompleteTerm"]);
+                    	break;
                 
             }
 
