@@ -19,11 +19,13 @@ $(function() {
 	}).addClass("autocomplete");
 	
     //Autocompletar de Area de Conocimiento
-	$("#id_autor").autocomplete("index.php?ac=libro&autoCompleteTerm=nombre",{
+	$("#autoautor").autocomplete("index.php?ac=libro&autoCompleteTerm=nombre",{
 		minChars: 1,
 		max: 1000,
 		delay: 0
-	}).addClass("autocomplete");
+	}).addClass("autocomplete").bind("result", function(){
+		
+	});
     
     // Validar los campos del formulario, enviarlo por ajax y actulizar la
     // tabla!!

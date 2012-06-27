@@ -26,7 +26,11 @@ echo $msg;
         </tr>
         <tr>
             <td>Autor</td>
-            <td><input type="text" name="id_autor" id="id_autor"  /></td>
+            <td>
+            <select id="id_autor">
+            
+            </select>
+            <input type="text" id="autoautor"  /></td>
         </tr>
         <tr>
             <td>Idioma</td>
