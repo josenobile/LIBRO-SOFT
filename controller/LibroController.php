@@ -1,5 +1,5 @@
 <?PHP
-class AreaController {
+class LibroController {
 	private $libro;
 	private $aParams;
 	private $motorDePlantilas;
