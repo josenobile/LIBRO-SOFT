@@ -6,13 +6,13 @@ $aParams = array ();
 switch ($_GET ["ac"]) {
 	case "area" :
 		require FRONTEND_PATH_CONTROLLERS . "/AreaController.php";
-		$area = new AreaController($engine);
-		$area->manejadorDeAcciones ();
+		$libro = new AreaController($engine);
+		$libro->manejadorDeAcciones ();
 		break;
 	case "libro" :
-		require FRONTEND_PATH_CONTROLLERS . "/CarreraController.php";
-		$carrera = new CarreraController ( $con, $engine );
-		$carrera->manejadorDeAcciones ();
+		require FRONTEND_PATH_CONTROLLERS . "/LibroController.php";
+		$libro = new LibroController($engine);
+		$libro->manejadorDeAcciones ();
 		break;
 	default :
 		$aParams ['user'] = 'super admin';

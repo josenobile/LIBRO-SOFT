@@ -1,10 +1,10 @@
 <?PHP 
 class Prestamo{
 	private $idPrestamo;
-	private $id_prestamista;
-	private $id_estado;
-	private $fecha_creacion;
-	private $fecha_devolucion;
+	private $idPrestamista;
+	private $idEstado;
+	private $fechaCreacion;
+	private $fechaDevolucion;
 	protected $con;
 	public function __construct(){
 		$this->con = DBNative::get();
@@ -20,23 +20,23 @@ class Prestamo{
 		return $this->idPrestamo;
 	}
 	public function getIdPrestamista(){
-		return $this->id_prestamista;
+		return $this->idPrestamista;
 	}
 	public function getIdEstado(){
-		return $this->id_estado;
+		return $this->idEstado;
 	}
 	public function getFechaCreacion(){
-		return $this->fecha_creacion;
+		return $this->fechaCreacion;
 	}
 	public function getFechaDevolucion(){
-		return $this->fecha_devolucion;
+		return $this->fechaDevolucion;
 	}
 	public function getByUsuario($id_prestamista){
 		return $this->listarObj(array("id_prestamista"=>$id_prestamista));
 	}
 	public function getUsuario(){
 		$usuario = new Usuario($this->con);
-		$usuario->cargarPorId($this->id_prestamista);
+		$usuario->cargarPorId($this->idPrestamista);
 		return $usuario;
 	}
 	public function getByEstadoPrestamos($id_estado){
@@ -44,7 +44,7 @@ class Prestamo{
 	}
 	public function getEstadoPrestamos(){
 		$estado_prestamos = new EstadoPrestamos($this->con);
-		$estado_prestamos->cargarPorId($this->id_estado);
+		$estado_prestamos->cargarPorId($this->idEstado);
 		return $estado_prestamos;
 	}
 
@@ -53,41 +53,43 @@ class Prestamo{
 	public function setIdPrestamo($idPrestamo){
 		$this->idPrestamo = $idPrestamo;
 	}
-	public function setId_prestamista($id_prestamista){
-		$this->id_prestamista = $id_prestamista;
+	public function setIdPrestamista($idPrestamista){
+		$this->idPrestamista = $idPrestamista;
 	}
-	public function setId_estado($id_estado){
-		$this->id_estado = $id_estado;
+	public function setIdEstado($idEstado){
+		$this->idEstado = $idEstado;
 	}
-	public function setFecha_creacion($fecha_creacion){
-		$this->fecha_creacion = $fecha_creacion;
+	public function setFechaCreacion($fechaCreacion){
+		$this->fechaCreacion = $fechaCreacion;
 	}
-	public function setFecha_devolucion($fecha_devolucion){
-		$this->fecha_devolucion = $fecha_devolucion;
+	public function setFechaDevolucion($fechaDevolucion){
+		$this->fechaDevolucion = $fechaDevolucion;
 	}
 	//LLena todos los atributos de la clase sacando los valores de un array
 	function setValues($array){
-		foreach($array as $key => $val)
+		foreach($array as $key => $val){
+			$key = lcfirst(str_replace(" ","",ucwords(str_replace("_"," ",$key))));
 			if(property_exists($this,$key))
 				$this->$key = $val;
+		}
 	}
 	
 	//Guarda o actualiza el objeto en la base de datos, la accion se determina por la clave primaria
 	public function save(){
 		if(empty($this->idPrestamo)){			
 			$this->idPrestamo = $this->con->autoInsert(array(
-			"id_prestamista" => $this->getId_prestamista(),
-			"id_estado" => $this->getId_estado(),
-			"fecha_creacion" => $this->getFecha_creacion(),
-			"fecha_devolucion" => $this->getFecha_devolucion(),
+			"id_prestamista" => $this->idPrestamista,
+			"id_estado" => $this->idEstado,
+			"fecha_creacion" => $this->fechaCreacion,
+			"fecha_devolucion" => $this->fechaDevolucion,
 			),"prestamo");
 			return;
 		}
 		return $this->con->autoUpdate(array(
-			"id_prestamista" => $this->getId_prestamista(),
-			"id_estado" => $this->getId_estado(),
-			"fecha_creacion" => $this->getFecha_creacion(),
-			"fecha_devolucion" => $this->getFecha_devolucion(),
+			"id_prestamista" => $this->idPrestamista,
+			"id_estado" => $this->idEstado,
+			"fecha_creacion" => $this->fechaCreacion,
+			"fecha_devolucion" => $this->fechaDevolucion,
 			),"prestamo","idPrestamo=".$this->getId());
 	}
     
@@ -95,10 +97,10 @@ class Prestamo{
 		if($idPrestamo>0){
 			$result = $this->con->query("SELECT * FROM `prestamo`  WHERE idPrestamo=".$idPrestamo);
 			$this->idPrestamo = $result[0]['idPrestamo'];
-			$this->id_prestamista = $result[0]['id_prestamista'];
-			$this->id_estado = $result[0]['id_estado'];
-			$this->fecha_creacion = $result[0]['fecha_creacion'];
-			$this->fecha_devolucion = $result[0]['fecha_devolucion'];
+			$this->idPrestamista = $result[0]['id_prestamista'];
+			$this->idEstado = $result[0]['id_estado'];
+			$this->fechaCreacion = $result[0]['fecha_creacion'];
+			$this->fechaDevolucion = $result[0]['fecha_devolucion'];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){

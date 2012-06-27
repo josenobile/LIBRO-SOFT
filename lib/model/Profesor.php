@@ -1,10 +1,10 @@
 <?PHP 
 class Profesor{
 	private $idProfesor;
-	private $Usuario_idUsuario;
+	private $usuarioIdUsuario;
 	private $dependencia;
 	private $titulo;
-	private $áreas_interés;
+	private $áreasInterés;
 	protected $con;
 	public function __construct(){
 		$this->con = DBNative::get();
@@ -20,7 +20,7 @@ class Profesor{
 		return $this->idProfesor;
 	}
 	public function getUsuarioIdUsuario(){
-		return $this->Usuario_idUsuario;
+		return $this->usuarioIdUsuario;
 	}
 	public function getDependencia(){
 		return $this->dependencia;
@@ -29,14 +29,14 @@ class Profesor{
 		return $this->titulo;
 	}
 	public function getáreasInterés(){
-		return $this->áreas_interés;
+		return $this->áreasInterés;
 	}
 	public function getByUsuario($Usuario_idUsuario){
 		return $this->listarObj(array("Usuario_idUsuario"=>$Usuario_idUsuario));
 	}
 	public function getUsuario(){
 		$usuario = new Usuario($this->con);
-		$usuario->cargarPorId($this->Usuario_idUsuario);
+		$usuario->cargarPorId($this->usuarioIdUsuario);
 		return $usuario;
 	}
 
@@ -45,8 +45,8 @@ class Profesor{
 	public function setIdProfesor($idProfesor){
 		$this->idProfesor = $idProfesor;
 	}
-	public function setUsuario_idUsuario($Usuario_idUsuario){
-		$this->Usuario_idUsuario = $Usuario_idUsuario;
+	public function setUsuarioIdUsuario($usuarioIdUsuario){
+		$this->usuarioIdUsuario = $usuarioIdUsuario;
 	}
 	public function setDependencia($dependencia){
 		$this->dependencia = $dependencia;
@@ -54,32 +54,34 @@ class Profesor{
 	public function setTitulo($titulo){
 		$this->titulo = $titulo;
 	}
-	public function setáreas_interés($áreas_interés){
-		$this->áreas_interés = $áreas_interés;
+	public function setáreasInterés($áreasInterés){
+		$this->áreasInterés = $áreasInterés;
 	}
 	//LLena todos los atributos de la clase sacando los valores de un array
 	function setValues($array){
-		foreach($array as $key => $val)
+		foreach($array as $key => $val){
+			$key = lcfirst(str_replace(" ","",ucwords(str_replace("_"," ",$key))));
 			if(property_exists($this,$key))
 				$this->$key = $val;
+		}
 	}
 	
 	//Guarda o actualiza el objeto en la base de datos, la accion se determina por la clave primaria
 	public function save(){
 		if(empty($this->idProfesor)){			
 			$this->idProfesor = $this->con->autoInsert(array(
-			"Usuario_idUsuario" => $this->getUsuario_idUsuario(),
-			"dependencia" => $this->getDependencia(),
-			"titulo" => $this->getTitulo(),
-			"áreas_interés" => $this->getáreas_interés(),
+			"Usuario_idUsuario" => $this->usuarioIdUsuario,
+			"dependencia" => $this->dependencia,
+			"titulo" => $this->titulo,
+			"áreas_interés" => $this->áreasInterés,
 			),"profesor");
 			return;
 		}
 		return $this->con->autoUpdate(array(
-			"Usuario_idUsuario" => $this->getUsuario_idUsuario(),
-			"dependencia" => $this->getDependencia(),
-			"titulo" => $this->getTitulo(),
-			"áreas_interés" => $this->getáreas_interés(),
+			"Usuario_idUsuario" => $this->usuarioIdUsuario,
+			"dependencia" => $this->dependencia,
+			"titulo" => $this->titulo,
+			"áreas_interés" => $this->áreasInterés,
 			),"profesor","idProfesor=".$this->getId());
 	}
     
@@ -87,10 +89,10 @@ class Profesor{
 		if($idProfesor>0){
 			$result = $this->con->query("SELECT * FROM `profesor`  WHERE idProfesor=".$idProfesor);
 			$this->idProfesor = $result[0]['idProfesor'];
-			$this->Usuario_idUsuario = $result[0]['Usuario_idUsuario'];
+			$this->usuarioIdUsuario = $result[0]['Usuario_idUsuario'];
 			$this->dependencia = $result[0]['dependencia'];
 			$this->titulo = $result[0]['titulo'];
-			$this->áreas_interés = $result[0]['áreas_interés'];
+			$this->áreasInterés = $result[0]['áreas_interés'];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){

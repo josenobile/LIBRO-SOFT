@@ -1,11 +1,11 @@
 <?PHP 
 class Autor{
 	private $idAutor;
-	private $primer_nombre;
-	private $segundo_nombre;
-	private $primer_apellido;
-	private $segundo_apellido;
-	private $pais_nacionalidad;
+	private $primerNombre;
+	private $segundoNombre;
+	private $primerApellido;
+	private $segundoApellido;
+	private $paisNacionalidad;
 	protected $con;
 	public function __construct(){
 		$this->con = DBNative::get();
@@ -21,19 +21,19 @@ class Autor{
 		return $this->idAutor;
 	}
 	public function getPrimerNombre(){
-		return $this->primer_nombre;
+		return $this->primerNombre;
 	}
 	public function getSegundoNombre(){
-		return $this->segundo_nombre;
+		return $this->segundoNombre;
 	}
 	public function getPrimerApellido(){
-		return $this->primer_apellido;
+		return $this->primerApellido;
 	}
 	public function getSegundoApellido(){
-		return $this->segundo_apellido;
+		return $this->segundoApellido;
 	}
 	public function getPaisNacionalidad(){
-		return $this->pais_nacionalidad;
+		return $this->paisNacionalidad;
 	}
 
 	//Setters
@@ -41,46 +41,48 @@ class Autor{
 	public function setIdAutor($idAutor){
 		$this->idAutor = $idAutor;
 	}
-	public function setPrimer_nombre($primer_nombre){
-		$this->primer_nombre = $primer_nombre;
+	public function setPrimerNombre($primerNombre){
+		$this->primerNombre = $primerNombre;
 	}
-	public function setSegundo_nombre($segundo_nombre){
-		$this->segundo_nombre = $segundo_nombre;
+	public function setSegundoNombre($segundoNombre){
+		$this->segundoNombre = $segundoNombre;
 	}
-	public function setPrimer_apellido($primer_apellido){
-		$this->primer_apellido = $primer_apellido;
+	public function setPrimerApellido($primerApellido){
+		$this->primerApellido = $primerApellido;
 	}
-	public function setSegundo_apellido($segundo_apellido){
-		$this->segundo_apellido = $segundo_apellido;
+	public function setSegundoApellido($segundoApellido){
+		$this->segundoApellido = $segundoApellido;
 	}
-	public function setPais_nacionalidad($pais_nacionalidad){
-		$this->pais_nacionalidad = $pais_nacionalidad;
+	public function setPaisNacionalidad($paisNacionalidad){
+		$this->paisNacionalidad = $paisNacionalidad;
 	}
 	//LLena todos los atributos de la clase sacando los valores de un array
 	function setValues($array){
-		foreach($array as $key => $val)
+		foreach($array as $key => $val){
+			$key = lcfirst(str_replace(" ","",ucwords(str_replace("_"," ",$key))));
 			if(property_exists($this,$key))
 				$this->$key = $val;
+		}
 	}
 	
 	//Guarda o actualiza el objeto en la base de datos, la accion se determina por la clave primaria
 	public function save(){
 		if(empty($this->idAutor)){			
 			$this->idAutor = $this->con->autoInsert(array(
-			"primer_nombre" => $this->getPrimer_nombre(),
-			"segundo_nombre" => $this->getSegundo_nombre(),
-			"primer_apellido" => $this->getPrimer_apellido(),
-			"segundo_apellido" => $this->getSegundo_apellido(),
-			"pais_nacionalidad" => $this->getPais_nacionalidad(),
+			"primer_nombre" => $this->primerNombre,
+			"segundo_nombre" => $this->segundoNombre,
+			"primer_apellido" => $this->primerApellido,
+			"segundo_apellido" => $this->segundoApellido,
+			"pais_nacionalidad" => $this->paisNacionalidad,
 			),"autor");
 			return;
 		}
 		return $this->con->autoUpdate(array(
-			"primer_nombre" => $this->getPrimer_nombre(),
-			"segundo_nombre" => $this->getSegundo_nombre(),
-			"primer_apellido" => $this->getPrimer_apellido(),
-			"segundo_apellido" => $this->getSegundo_apellido(),
-			"pais_nacionalidad" => $this->getPais_nacionalidad(),
+			"primer_nombre" => $this->primerNombre,
+			"segundo_nombre" => $this->segundoNombre,
+			"primer_apellido" => $this->primerApellido,
+			"segundo_apellido" => $this->segundoApellido,
+			"pais_nacionalidad" => $this->paisNacionalidad,
 			),"autor","idAutor=".$this->getId());
 	}
     
@@ -88,11 +90,11 @@ class Autor{
 		if($idAutor>0){
 			$result = $this->con->query("SELECT * FROM `autor`  WHERE idAutor=".$idAutor);
 			$this->idAutor = $result[0]['idAutor'];
-			$this->primer_nombre = $result[0]['primer_nombre'];
-			$this->segundo_nombre = $result[0]['segundo_nombre'];
-			$this->primer_apellido = $result[0]['primer_apellido'];
-			$this->segundo_apellido = $result[0]['segundo_apellido'];
-			$this->pais_nacionalidad = $result[0]['pais_nacionalidad'];
+			$this->primerNombre = $result[0]['primer_nombre'];
+			$this->segundoNombre = $result[0]['segundo_nombre'];
+			$this->primerApellido = $result[0]['primer_apellido'];
+			$this->segundoApellido = $result[0]['segundo_apellido'];
+			$this->paisNacionalidad = $result[0]['pais_nacionalidad'];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){

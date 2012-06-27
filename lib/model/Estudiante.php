@@ -1,8 +1,8 @@
 <?PHP 
 class Estudiante{
 	private $idEstudiante;
-	private $Usuario_idUsuario;
-	private $id_carrera;
+	private $usuarioIdUsuario;
+	private $idCarrera;
 	protected $con;
 	public function __construct(){
 		$this->con = DBNative::get();
@@ -18,17 +18,17 @@ class Estudiante{
 		return $this->idEstudiante;
 	}
 	public function getUsuarioIdUsuario(){
-		return $this->Usuario_idUsuario;
+		return $this->usuarioIdUsuario;
 	}
 	public function getIdCarrera(){
-		return $this->id_carrera;
+		return $this->idCarrera;
 	}
 	public function getByCarrera($id_carrera){
 		return $this->listarObj(array("id_carrera"=>$id_carrera));
 	}
 	public function getCarrera(){
 		$carrera = new Carrera($this->con);
-		$carrera->cargarPorId($this->id_carrera);
+		$carrera->cargarPorId($this->idCarrera);
 		return $carrera;
 	}
 	public function getByUsuario($Usuario_idUsuario){
@@ -36,7 +36,7 @@ class Estudiante{
 	}
 	public function getUsuario(){
 		$usuario = new Usuario($this->con);
-		$usuario->cargarPorId($this->Usuario_idUsuario);
+		$usuario->cargarPorId($this->usuarioIdUsuario);
 		return $usuario;
 	}
 
@@ -45,31 +45,33 @@ class Estudiante{
 	public function setIdEstudiante($idEstudiante){
 		$this->idEstudiante = $idEstudiante;
 	}
-	public function setUsuario_idUsuario($Usuario_idUsuario){
-		$this->Usuario_idUsuario = $Usuario_idUsuario;
+	public function setUsuarioIdUsuario($usuarioIdUsuario){
+		$this->usuarioIdUsuario = $usuarioIdUsuario;
 	}
-	public function setId_carrera($id_carrera){
-		$this->id_carrera = $id_carrera;
+	public function setIdCarrera($idCarrera){
+		$this->idCarrera = $idCarrera;
 	}
 	//LLena todos los atributos de la clase sacando los valores de un array
 	function setValues($array){
-		foreach($array as $key => $val)
+		foreach($array as $key => $val){
+			$key = lcfirst(str_replace(" ","",ucwords(str_replace("_"," ",$key))));
 			if(property_exists($this,$key))
 				$this->$key = $val;
+		}
 	}
 	
 	//Guarda o actualiza el objeto en la base de datos, la accion se determina por la clave primaria
 	public function save(){
 		if(empty($this->idEstudiante)){			
 			$this->idEstudiante = $this->con->autoInsert(array(
-			"Usuario_idUsuario" => $this->getUsuario_idUsuario(),
-			"id_carrera" => $this->getId_carrera(),
+			"Usuario_idUsuario" => $this->usuarioIdUsuario,
+			"id_carrera" => $this->idCarrera,
 			),"estudiante");
 			return;
 		}
 		return $this->con->autoUpdate(array(
-			"Usuario_idUsuario" => $this->getUsuario_idUsuario(),
-			"id_carrera" => $this->getId_carrera(),
+			"Usuario_idUsuario" => $this->usuarioIdUsuario,
+			"id_carrera" => $this->idCarrera,
 			),"estudiante","idEstudiante=".$this->getId());
 	}
     
@@ -77,8 +79,8 @@ class Estudiante{
 		if($idEstudiante>0){
 			$result = $this->con->query("SELECT * FROM `estudiante`  WHERE idEstudiante=".$idEstudiante);
 			$this->idEstudiante = $result[0]['idEstudiante'];
-			$this->Usuario_idUsuario = $result[0]['Usuario_idUsuario'];
-			$this->id_carrera = $result[0]['id_carrera'];
+			$this->usuarioIdUsuario = $result[0]['Usuario_idUsuario'];
+			$this->idCarrera = $result[0]['id_carrera'];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){

@@ -1,16 +1,16 @@
 <?PHP 
 class Libro{
 	private $idLibro;
-	private $id_area_conocimiento;
-	private $ISBN;
+	private $idAreaConocimiento;
+	private $iSBN;
 	private $titulo;
-	private $año_publicación;
+	private $añoPublicación;
 	private $idioma;
-	private $palabras_claves;
-	private $id_editorial;
+	private $palabrasClaves;
+	private $idEditorial;
 	private $caratula;
 	private $archivo;
-	private $fecha_ingreso;
+	private $fechaIngreso;
 	protected $con;
 	public function __construct(){
 		$this->con = DBNative::get();
@@ -26,25 +26,25 @@ class Libro{
 		return $this->idLibro;
 	}
 	public function getIdAreaConocimiento(){
-		return $this->id_area_conocimiento;
+		return $this->idAreaConocimiento;
 	}
 	public function getISBN(){
-		return $this->ISBN;
+		return $this->iSBN;
 	}
 	public function getTitulo(){
 		return $this->titulo;
 	}
 	public function getAñoPublicación(){
-		return $this->año_publicación;
+		return $this->añoPublicación;
 	}
 	public function getIdioma(){
 		return $this->idioma;
 	}
 	public function getPalabrasClaves(){
-		return $this->palabras_claves;
+		return $this->palabrasClaves;
 	}
 	public function getIdEditorial(){
-		return $this->id_editorial;
+		return $this->idEditorial;
 	}
 	public function getCaratula(){
 		return $this->caratula;
@@ -53,14 +53,14 @@ class Libro{
 		return $this->archivo;
 	}
 	public function getFechaIngreso(){
-		return $this->fecha_ingreso;
+		return $this->fechaIngreso;
 	}
 	public function getByEditorial($id_editorial){
 		return $this->listarObj(array("id_editorial"=>$id_editorial));
 	}
 	public function getEditorial(){
 		$editorial = new Editorial($this->con);
-		$editorial->cargarPorId($this->id_editorial);
+		$editorial->cargarPorId($this->idEditorial);
 		return $editorial;
 	}
 	public function getByArea($id_area_conocimiento){
@@ -68,7 +68,7 @@ class Libro{
 	}
 	public function getArea(){
 		$area = new Area($this->con);
-		$area->cargarPorId($this->id_area_conocimiento);
+		$area->cargarPorId($this->idAreaConocimiento);
 		return $area;
 	}
 
@@ -77,26 +77,26 @@ class Libro{
 	public function setIdLibro($idLibro){
 		$this->idLibro = $idLibro;
 	}
-	public function setId_area_conocimiento($id_area_conocimiento){
-		$this->id_area_conocimiento = $id_area_conocimiento;
+	public function setIdAreaConocimiento($idAreaConocimiento){
+		$this->idAreaConocimiento = $idAreaConocimiento;
 	}
-	public function setISBN($ISBN){
-		$this->ISBN = $ISBN;
+	public function setISBN($iSBN){
+		$this->iSBN = $iSBN;
 	}
 	public function setTitulo($titulo){
 		$this->titulo = $titulo;
 	}
-	public function setAño_publicación($año_publicación){
-		$this->año_publicación = $año_publicación;
+	public function setAñoPublicación($añoPublicación){
+		$this->añoPublicación = $añoPublicación;
 	}
 	public function setIdioma($idioma){
 		$this->idioma = $idioma;
 	}
-	public function setPalabras_claves($palabras_claves){
-		$this->palabras_claves = $palabras_claves;
+	public function setPalabrasClaves($palabrasClaves){
+		$this->palabrasClaves = $palabrasClaves;
 	}
-	public function setId_editorial($id_editorial){
-		$this->id_editorial = $id_editorial;
+	public function setIdEditorial($idEditorial){
+		$this->idEditorial = $idEditorial;
 	}
 	public function setCaratula($caratula){
 		$this->caratula = $caratula;
@@ -104,44 +104,46 @@ class Libro{
 	public function setArchivo($archivo){
 		$this->archivo = $archivo;
 	}
-	public function setFecha_ingreso($fecha_ingreso){
-		$this->fecha_ingreso = $fecha_ingreso;
+	public function setFechaIngreso($fechaIngreso){
+		$this->fechaIngreso = $fechaIngreso;
 	}
 	//LLena todos los atributos de la clase sacando los valores de un array
 	function setValues($array){
-		foreach($array as $key => $val)
+		foreach($array as $key => $val){
+			$key = lcfirst(str_replace(" ","",ucwords(str_replace("_"," ",$key))));
 			if(property_exists($this,$key))
 				$this->$key = $val;
+		}
 	}
 	
 	//Guarda o actualiza el objeto en la base de datos, la accion se determina por la clave primaria
 	public function save(){
 		if(empty($this->idLibro)){			
 			$this->idLibro = $this->con->autoInsert(array(
-			"id_area_conocimiento" => $this->getId_area_conocimiento(),
-			"ISBN" => $this->getISBN(),
-			"titulo" => $this->getTitulo(),
-			"año_publicación" => $this->getAño_publicación(),
-			"idioma" => $this->getIdioma(),
-			"palabras_claves" => $this->getPalabras_claves(),
-			"id_editorial" => $this->getId_editorial(),
-			"caratula" => $this->getCaratula(),
-			"archivo" => $this->getArchivo(),
-			"fecha_ingreso" => $this->getFecha_ingreso(),
+			"id_area_conocimiento" => $this->idAreaConocimiento,
+			"ISBN" => $this->iSBN,
+			"titulo" => $this->titulo,
+			"año_publicación" => $this->añoPublicación,
+			"idioma" => $this->idioma,
+			"palabras_claves" => $this->palabrasClaves,
+			"id_editorial" => $this->idEditorial,
+			"caratula" => $this->caratula,
+			"archivo" => $this->archivo,
+			"fecha_ingreso" => $this->fechaIngreso,
 			),"libro");
 			return;
 		}
 		return $this->con->autoUpdate(array(
-			"id_area_conocimiento" => $this->getId_area_conocimiento(),
-			"ISBN" => $this->getISBN(),
-			"titulo" => $this->getTitulo(),
-			"año_publicación" => $this->getAño_publicación(),
-			"idioma" => $this->getIdioma(),
-			"palabras_claves" => $this->getPalabras_claves(),
-			"id_editorial" => $this->getId_editorial(),
-			"caratula" => $this->getCaratula(),
-			"archivo" => $this->getArchivo(),
-			"fecha_ingreso" => $this->getFecha_ingreso(),
+			"id_area_conocimiento" => $this->idAreaConocimiento,
+			"ISBN" => $this->iSBN,
+			"titulo" => $this->titulo,
+			"año_publicación" => $this->añoPublicación,
+			"idioma" => $this->idioma,
+			"palabras_claves" => $this->palabrasClaves,
+			"id_editorial" => $this->idEditorial,
+			"caratula" => $this->caratula,
+			"archivo" => $this->archivo,
+			"fecha_ingreso" => $this->fechaIngreso,
 			),"libro","idLibro=".$this->getId());
 	}
     
@@ -149,16 +151,16 @@ class Libro{
 		if($idLibro>0){
 			$result = $this->con->query("SELECT * FROM `libro`  WHERE idLibro=".$idLibro);
 			$this->idLibro = $result[0]['idLibro'];
-			$this->id_area_conocimiento = $result[0]['id_area_conocimiento'];
-			$this->ISBN = $result[0]['ISBN'];
+			$this->idAreaConocimiento = $result[0]['id_area_conocimiento'];
+			$this->iSBN = $result[0]['ISBN'];
 			$this->titulo = $result[0]['titulo'];
-			$this->año_publicación = $result[0]['año_publicación'];
+			$this->añoPublicación = $result[0]['año_publicación'];
 			$this->idioma = $result[0]['idioma'];
-			$this->palabras_claves = $result[0]['palabras_claves'];
-			$this->id_editorial = $result[0]['id_editorial'];
+			$this->palabrasClaves = $result[0]['palabras_claves'];
+			$this->idEditorial = $result[0]['id_editorial'];
 			$this->caratula = $result[0]['caratula'];
 			$this->archivo = $result[0]['archivo'];
-			$this->fecha_ingreso = $result[0]['fecha_ingreso'];
+			$this->fechaIngreso = $result[0]['fecha_ingreso'];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){

@@ -1,12 +1,12 @@
 <?PHP 
 class Ejemplar{
 	private $idEjemplar;
-	private $Libro_idLibro;
-	private $id_estado;
-	private $nombre_sala;
-	private $numero_pasillo;
+	private $libroIdLibro;
+	private $idEstado;
+	private $nombreSala;
+	private $numeroPasillo;
 	private $estante;
-	private $numero_cajon;
+	private $numeroCajon;
 	protected $con;
 	public function __construct(){
 		$this->con = DBNative::get();
@@ -22,29 +22,29 @@ class Ejemplar{
 		return $this->idEjemplar;
 	}
 	public function getLibroIdLibro(){
-		return $this->Libro_idLibro;
+		return $this->libroIdLibro;
 	}
 	public function getIdEstado(){
-		return $this->id_estado;
+		return $this->idEstado;
 	}
 	public function getNombreSala(){
-		return $this->nombre_sala;
+		return $this->nombreSala;
 	}
 	public function getNumeroPasillo(){
-		return $this->numero_pasillo;
+		return $this->numeroPasillo;
 	}
 	public function getEstante(){
 		return $this->estante;
 	}
 	public function getNumeroCajon(){
-		return $this->numero_cajon;
+		return $this->numeroCajon;
 	}
 	public function getByLibro($Libro_idLibro){
 		return $this->listarObj(array("Libro_idLibro"=>$Libro_idLibro));
 	}
 	public function getLibro(){
 		$libro = new Libro($this->con);
-		$libro->cargarPorId($this->Libro_idLibro);
+		$libro->cargarPorId($this->libroIdLibro);
 		return $libro;
 	}
 	public function getByEstadoEjemplar($id_estado){
@@ -52,7 +52,7 @@ class Ejemplar{
 	}
 	public function getEstadoEjemplar(){
 		$estado_ejemplar = new EstadoEjemplar($this->con);
-		$estado_ejemplar->cargarPorId($this->id_estado);
+		$estado_ejemplar->cargarPorId($this->idEstado);
 		return $estado_ejemplar;
 	}
 
@@ -61,51 +61,53 @@ class Ejemplar{
 	public function setIdEjemplar($idEjemplar){
 		$this->idEjemplar = $idEjemplar;
 	}
-	public function setLibro_idLibro($Libro_idLibro){
-		$this->Libro_idLibro = $Libro_idLibro;
+	public function setLibroIdLibro($libroIdLibro){
+		$this->libroIdLibro = $libroIdLibro;
 	}
-	public function setId_estado($id_estado){
-		$this->id_estado = $id_estado;
+	public function setIdEstado($idEstado){
+		$this->idEstado = $idEstado;
 	}
-	public function setNombre_sala($nombre_sala){
-		$this->nombre_sala = $nombre_sala;
+	public function setNombreSala($nombreSala){
+		$this->nombreSala = $nombreSala;
 	}
-	public function setNumero_pasillo($numero_pasillo){
-		$this->numero_pasillo = $numero_pasillo;
+	public function setNumeroPasillo($numeroPasillo){
+		$this->numeroPasillo = $numeroPasillo;
 	}
 	public function setEstante($estante){
 		$this->estante = $estante;
 	}
-	public function setNumero_cajon($numero_cajon){
-		$this->numero_cajon = $numero_cajon;
+	public function setNumeroCajon($numeroCajon){
+		$this->numeroCajon = $numeroCajon;
 	}
 	//LLena todos los atributos de la clase sacando los valores de un array
 	function setValues($array){
-		foreach($array as $key => $val)
+		foreach($array as $key => $val){
+			$key = lcfirst(str_replace(" ","",ucwords(str_replace("_"," ",$key))));
 			if(property_exists($this,$key))
 				$this->$key = $val;
+		}
 	}
 	
 	//Guarda o actualiza el objeto en la base de datos, la accion se determina por la clave primaria
 	public function save(){
 		if(empty($this->idEjemplar)){			
 			$this->idEjemplar = $this->con->autoInsert(array(
-			"Libro_idLibro" => $this->getLibro_idLibro(),
-			"id_estado" => $this->getId_estado(),
-			"nombre_sala" => $this->getNombre_sala(),
-			"numero_pasillo" => $this->getNumero_pasillo(),
-			"estante" => $this->getEstante(),
-			"numero_cajon" => $this->getNumero_cajon(),
+			"Libro_idLibro" => $this->libroIdLibro,
+			"id_estado" => $this->idEstado,
+			"nombre_sala" => $this->nombreSala,
+			"numero_pasillo" => $this->numeroPasillo,
+			"estante" => $this->estante,
+			"numero_cajon" => $this->numeroCajon,
 			),"ejemplar");
 			return;
 		}
 		return $this->con->autoUpdate(array(
-			"Libro_idLibro" => $this->getLibro_idLibro(),
-			"id_estado" => $this->getId_estado(),
-			"nombre_sala" => $this->getNombre_sala(),
-			"numero_pasillo" => $this->getNumero_pasillo(),
-			"estante" => $this->getEstante(),
-			"numero_cajon" => $this->getNumero_cajon(),
+			"Libro_idLibro" => $this->libroIdLibro,
+			"id_estado" => $this->idEstado,
+			"nombre_sala" => $this->nombreSala,
+			"numero_pasillo" => $this->numeroPasillo,
+			"estante" => $this->estante,
+			"numero_cajon" => $this->numeroCajon,
 			),"ejemplar","idEjemplar=".$this->getId());
 	}
     
@@ -113,12 +115,12 @@ class Ejemplar{
 		if($idEjemplar>0){
 			$result = $this->con->query("SELECT * FROM `ejemplar`  WHERE idEjemplar=".$idEjemplar);
 			$this->idEjemplar = $result[0]['idEjemplar'];
-			$this->Libro_idLibro = $result[0]['Libro_idLibro'];
-			$this->id_estado = $result[0]['id_estado'];
-			$this->nombre_sala = $result[0]['nombre_sala'];
-			$this->numero_pasillo = $result[0]['numero_pasillo'];
+			$this->libroIdLibro = $result[0]['Libro_idLibro'];
+			$this->idEstado = $result[0]['id_estado'];
+			$this->nombreSala = $result[0]['nombre_sala'];
+			$this->numeroPasillo = $result[0]['numero_pasillo'];
 			$this->estante = $result[0]['estante'];
-			$this->numero_cajon = $result[0]['numero_cajon'];
+			$this->numeroCajon = $result[0]['numero_cajon'];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){

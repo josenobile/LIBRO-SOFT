@@ -11,7 +11,7 @@ class DBNative {
 	public $DSN;
 	public $debug = false;//print query and answer (boolean or rows number)
 	public $ajax;//defined into the constructor, if true, is ajax request, else is not.
-	public $ajaxDebug = false;//Do debug in ajax request, if is ON, json answer will not working on browser
+	public $ajaxDebug = true;//Do debug in ajax request, if is ON, json answer will not working on browser
 
 	private function DBNative($DSN = false, $host = false, $user = false,
 			$passwd = false, $db = false) {

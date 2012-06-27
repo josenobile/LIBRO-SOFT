@@ -44,25 +44,27 @@ class Area{
 	}
 	//LLena todos los atributos de la clase sacando los valores de un array
 	function setValues($array){
-		foreach($array as $key => $val)
+		foreach($array as $key => $val){
+			$key = lcfirst(str_replace(" ","",ucwords(str_replace("_"," ",$key))));
 			if(property_exists($this,$key))
 				$this->$key = $val;
+		}
 	}
 	
 	//Guarda o actualiza el objeto en la base de datos, la accion se determina por la clave primaria
 	public function save(){
 		if(empty($this->idArea)){			
 			$this->idArea = $this->con->autoInsert(array(
-			"area" => $this->getArea(),
-			"codigo" => $this->getCodigo(),
-			"descripcion" => $this->getDescripcion(),
+			"area" => $this->area,
+			"codigo" => $this->codigo,
+			"descripcion" => $this->descripcion,
 			),"area");
 			return;
 		}
 		return $this->con->autoUpdate(array(
-			"area" => $this->getArea(),
-			"codigo" => $this->getCodigo(),
-			"descripcion" => $this->getDescripcion(),
+			"area" => $this->area,
+			"codigo" => $this->codigo,
+			"descripcion" => $this->descripcion,
 			),"area","idArea=".$this->getId());
 	}
     

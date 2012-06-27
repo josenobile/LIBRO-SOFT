@@ -37,23 +37,25 @@ class Carrera{
 	}
 	//LLena todos los atributos de la clase sacando los valores de un array
 	function setValues($array){
-		foreach($array as $key => $val)
+		foreach($array as $key => $val){
+			$key = lcfirst(str_replace(" ","",ucwords(str_replace("_"," ",$key))));
 			if(property_exists($this,$key))
 				$this->$key = $val;
+		}
 	}
 	
 	//Guarda o actualiza el objeto en la base de datos, la accion se determina por la clave primaria
 	public function save(){
 		if(empty($this->idCarrera)){			
 			$this->idCarrera = $this->con->autoInsert(array(
-			"carrera" => $this->getCarrera(),
-			"codigo" => $this->getCodigo(),
+			"carrera" => $this->carrera,
+			"codigo" => $this->codigo,
 			),"carrera");
 			return;
 		}
 		return $this->con->autoUpdate(array(
-			"carrera" => $this->getCarrera(),
-			"codigo" => $this->getCodigo(),
+			"carrera" => $this->carrera,
+			"codigo" => $this->codigo,
 			),"carrera","idCarrera=".$this->getId());
 	}
     

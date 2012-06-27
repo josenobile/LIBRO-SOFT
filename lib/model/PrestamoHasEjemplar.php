@@ -1,8 +1,8 @@
 <?PHP 
 class PrestamoHasEjemplar{
-	private $idPrestamo_Ejemplar;
-	private $Prestamo_idPrestamo;
-	private $Ejemplar_idEjemplar;
+	private $idPrestamoEjemplar;
+	private $prestamoIdPrestamo;
+	private $ejemplarIdEjemplar;
 	protected $con;
 	public function __construct(){
 		$this->con = DBNative::get();
@@ -10,25 +10,25 @@ class PrestamoHasEjemplar{
 	//Getters
 
 	public function getId(){
-		return $this->idPrestamo_Ejemplar;
+		return $this->idPrestamoEjemplar;
 	}	public function getNombreId(){
 		return "idPrestamo_Ejemplar";
 	}
 	public function getIdPrestamoEjemplar(){
-		return $this->idPrestamo_Ejemplar;
+		return $this->idPrestamoEjemplar;
 	}
 	public function getPrestamoIdPrestamo(){
-		return $this->Prestamo_idPrestamo;
+		return $this->prestamoIdPrestamo;
 	}
 	public function getEjemplarIdEjemplar(){
-		return $this->Ejemplar_idEjemplar;
+		return $this->ejemplarIdEjemplar;
 	}
 	public function getByPrestamo($Prestamo_idPrestamo){
 		return $this->listarObj(array("Prestamo_idPrestamo"=>$Prestamo_idPrestamo));
 	}
 	public function getPrestamo(){
 		$prestamo = new Prestamo($this->con);
-		$prestamo->cargarPorId($this->Prestamo_idPrestamo);
+		$prestamo->cargarPorId($this->prestamoIdPrestamo);
 		return $prestamo;
 	}
 	public function getByEjemplar($Ejemplar_idEjemplar){
@@ -36,49 +36,51 @@ class PrestamoHasEjemplar{
 	}
 	public function getEjemplar(){
 		$ejemplar = new Ejemplar($this->con);
-		$ejemplar->cargarPorId($this->Ejemplar_idEjemplar);
+		$ejemplar->cargarPorId($this->ejemplarIdEjemplar);
 		return $ejemplar;
 	}
 
 	//Setters
 
-	public function setIdPrestamo_Ejemplar($idPrestamo_Ejemplar){
-		$this->idPrestamo_Ejemplar = $idPrestamo_Ejemplar;
+	public function setIdPrestamoEjemplar($idPrestamoEjemplar){
+		$this->idPrestamoEjemplar = $idPrestamoEjemplar;
 	}
-	public function setPrestamo_idPrestamo($Prestamo_idPrestamo){
-		$this->Prestamo_idPrestamo = $Prestamo_idPrestamo;
+	public function setPrestamoIdPrestamo($prestamoIdPrestamo){
+		$this->prestamoIdPrestamo = $prestamoIdPrestamo;
 	}
-	public function setEjemplar_idEjemplar($Ejemplar_idEjemplar){
-		$this->Ejemplar_idEjemplar = $Ejemplar_idEjemplar;
+	public function setEjemplarIdEjemplar($ejemplarIdEjemplar){
+		$this->ejemplarIdEjemplar = $ejemplarIdEjemplar;
 	}
 	//LLena todos los atributos de la clase sacando los valores de un array
 	function setValues($array){
-		foreach($array as $key => $val)
+		foreach($array as $key => $val){
+			$key = lcfirst(str_replace(" ","",ucwords(str_replace("_"," ",$key))));
 			if(property_exists($this,$key))
 				$this->$key = $val;
+		}
 	}
 	
 	//Guarda o actualiza el objeto en la base de datos, la accion se determina por la clave primaria
 	public function save(){
-		if(empty($this->idPrestamo_Ejemplar)){			
-			$this->idPrestamo_Ejemplar = $this->con->autoInsert(array(
-			"Prestamo_idPrestamo" => $this->getPrestamo_idPrestamo(),
-			"Ejemplar_idEjemplar" => $this->getEjemplar_idEjemplar(),
+		if(empty($this->idPrestamoEjemplar)){			
+			$this->idPrestamoEjemplar = $this->con->autoInsert(array(
+			"Prestamo_idPrestamo" => $this->prestamoIdPrestamo,
+			"Ejemplar_idEjemplar" => $this->ejemplarIdEjemplar,
 			),"prestamo_has_ejemplar");
 			return;
 		}
 		return $this->con->autoUpdate(array(
-			"Prestamo_idPrestamo" => $this->getPrestamo_idPrestamo(),
-			"Ejemplar_idEjemplar" => $this->getEjemplar_idEjemplar(),
+			"Prestamo_idPrestamo" => $this->prestamoIdPrestamo,
+			"Ejemplar_idEjemplar" => $this->ejemplarIdEjemplar,
 			),"prestamo_has_ejemplar","idPrestamo_Ejemplar=".$this->getId());
 	}
     
 	public function cargarPorId($idPrestamo_Ejemplar){
 		if($idPrestamo_Ejemplar>0){
 			$result = $this->con->query("SELECT * FROM `prestamo_has_ejemplar`  WHERE idPrestamo_Ejemplar=".$idPrestamo_Ejemplar);
-			$this->idPrestamo_Ejemplar = $result[0]['idPrestamo_Ejemplar'];
-			$this->Prestamo_idPrestamo = $result[0]['Prestamo_idPrestamo'];
-			$this->Ejemplar_idEjemplar = $result[0]['Ejemplar_idEjemplar'];
+			$this->idPrestamoEjemplar = $result[0]['idPrestamo_Ejemplar'];
+			$this->prestamoIdPrestamo = $result[0]['Prestamo_idPrestamo'];
+			$this->ejemplarIdEjemplar = $result[0]['Ejemplar_idEjemplar'];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
