@@ -18,14 +18,14 @@ $(function() {
 		delay: 0
 	}).addClass("autocomplete");
 	
-<<<<<<< HEAD
     //Autocompletar de Autor
 	$("#autoautor").autocomplete("index.php?ac=libro&autoCompleteTerm=nombre",{
 		minChars: 1,
 		max: 1000,
 		delay: 0
-	}).addClass("autocomplete").bind("result", function(){
-		
+	}).addClass("autocomplete").bind("result", function(e, array, nombre){
+		$("<option value="+nombre+">"+nombre+"</option>").appendTo($("#id_autor")).attr("selected","selected");
+                $("#autoautor").val('');
 	});
 	
     //Autocompletar de Editorial

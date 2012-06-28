@@ -25,9 +25,9 @@ echo $msg;
             <td><input type="text" name="id_area_conocimiento" id="id_area_conocimiento"  /></td>
         </tr>
         <tr>
-            <td>Autor</td>
+            <td>Autores</td>
             <td>
-            <select id="id_autor">
+            <select multiple="multiple" id="id_autor">
             
             </select>
             <input type="text" id="autoautor"  /></td>
