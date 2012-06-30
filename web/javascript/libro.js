@@ -34,11 +34,11 @@ $(function() {
 		max: 1000,
 		delay: 0
 	}).addClass("autocomplete").bind("result", function(e, row, nombre ){
-            $("<input type='hidden' name='idAutor[]' value='"+row[1]+"' />").insertBefore($("#autoautor"));
-            $("<span>"+nombre+"</span><span class='closeAutoAutor'>Close</span>").appendTo("#autores").filter(".closeAutoAutor").data("id", row[1]).bind("click", function(){
-            $('input:hidden').filter('[value="'+$(this).data("id")+'"]').remove();
-            $(this).prev().remove();
-            $(this).remove();
+		$("<input type='hidden' name='idAutor[]' value='"+row[1]+"' />").insertBefore($("#autoautor"));
+		$("<span class='labelAutor'>"+nombre+"<span class='closeAutoAutor'></span></span>").appendTo("#autores").
+		find(".closeAutoAutor").data("id", row[1]).bind("click", function(){
+			$('input:hidden').filter('[value="'+$(this).data("id")+'"]').remove();
+			$(this).parent().remove();
         });
         $("#autoautor").val('');
 	});

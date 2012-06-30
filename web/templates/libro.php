@@ -34,7 +34,16 @@ echo $msg;
         </tr>
         <tr>
             <td>Idioma</td>
-            <td><input type="text" name="idioma" id="idioma"  /></td>
+            <td><select name="idioma" id="idioma">
+            <option value="">Seleccione uno</option>
+            <?PHP
+			foreach($langs as $lang){
+			?>
+            <option value="<?PHP echo $lang;?>"><?PHP echo $lang;?></option>          
+            <?PHP
+			}
+			?>
+            </select></td>
         </tr>
         <tr>
             <td>Palabras Claves</td>

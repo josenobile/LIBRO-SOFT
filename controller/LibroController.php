@@ -52,6 +52,7 @@ class LibroController {
             $this->cargarPorId(intval($_GET["id"]));
             die(json_encode($this->aParams["libro"]));
         }
+        $this->aParams["langs"] = $this->libro->getLangs();
         $this->mostarPlantilla();
     }
 
