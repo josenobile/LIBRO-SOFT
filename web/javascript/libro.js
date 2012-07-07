@@ -21,11 +21,26 @@ $(function() {
     //Autocompletar de Autor
 	$("#autoautor").autocomplete("index.php?ac=libro&autoCompleteTerm=nombre",{
 		minChars: 1,
+                parse: function(data) {
+                        data = jQuery.parseJSON(data);
+			return $.map(data, function(row) {
+                                return {
+					data: [row.nombre, row.idAutor],
+					value: row.nombre,
+					result: row.nombre
+				}
+			});
+		},
 		max: 1000,
 		delay: 0
-	}).addClass("autocomplete").bind("result", function(e, array, nombre){
-		$("<option value="+nombre+">"+nombre+"</option>").appendTo($("#id_autor")).attr("selected","selected");
-                $("#autoautor").val('');
+	}).addClass("autocomplete").bind("result", function(e, row, nombre ){
+		$("<input type='hidden' name='idAutor[]' value='"+row[1]+"' />").insertBefore($("#autoautor"));
+		$("<span class='labelAutor'>"+nombre+"<span class='closeAutoAutor'></span></span>").appendTo("#autores").
+		find(".closeAutoAutor").data("id", row[1]).bind("click", function(){
+			$('input:hidden').filter('[value="'+$(this).data("id")+'"]').remove();
+			$(this).parent().remove();
+        });
+        $("#autoautor").val('');
 	});
 	
     //Autocompletar de Editorial

@@ -18,4 +18,7 @@ class LibroModel  extends Libro{
 			$columns, $this->getNombreId());
 		return $pager;
 	}
+	public function getLangs(){
+		return $this->con->getEnumValues("Libro", "idioma");
+	}
 }
