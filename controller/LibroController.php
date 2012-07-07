@@ -23,6 +23,7 @@ class LibroController {
 
                 case "nombre":
                     $result = (new AutorModel())->listar(array("primer_apellido" => $term), "primer_apellido", "0," . $_REQUEST["limit"], false, $fields = "DISTINCT CONCAT(primer_apellido, ' ', IFNULL(segundo_apellido,''), ', ', primer_nombre, ' ', IFNULL(segundo_nombre,'')) as nombre, idAutor");
+                    die(json_encode($result));
                     break;
 
                 case "editorial":
@@ -33,7 +34,9 @@ class LibroController {
             $aResp = array();
             if (!is_array($result))
                 exit;
-            echo json_encode($result);
+         	foreach ($result as $row) {
+                echo $row[$_REQUEST["autoCompleteTerm"]] . "\r\n";
+            }
 			exit;
         }
         //Listar AJAX
