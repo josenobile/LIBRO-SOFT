@@ -211,7 +211,7 @@ foreach($campos as $campo)
 			$this-><?PHP echo lcfirst(str_replace(" ","",ucwords(str_replace("_"," ",$campo["Field"]))));?> = $result[0]['<?PHP echo $campo["Field"];?>'];
 <?PHP
 }//foreach de campos
-?>
+?>		return $result[0];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
@@ -249,7 +249,7 @@ foreach($campos as $campo)
 	//como listar, pero retorna un array de objetos
 	function listarObj($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
 		$rowsr = array();
-		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, $fields);
+		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, '*');
 		foreach($rows as $row){
 			$obj = clone $this;
 			$obj->cargarPorId($row["<?PHP echo $primary;?>"]);

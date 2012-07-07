@@ -47,14 +47,6 @@ class Usuario{
 	public function getUniversidad(){
 		return $this->universidad;
 	}
-	public function getByTipoIdentificación($id_tipo_identificacion){
-		return $this->listarObj(array("id_tipo_identificacion"=>$id_tipo_identificacion));
-	}
-	public function getTipoIdentificación(){
-		$tipo_identificación = new TipoIdentificación($this->con);
-		$tipo_identificación->cargarPorId($this->idTipoIdentificacion);
-		return $tipo_identificación;
-	}
 
 	//Setters
 
@@ -133,6 +125,7 @@ class Usuario{
 			$this->telefono = $result[0]['telefono'];
 			$this->email = $result[0]['email'];
 			$this->universidad = $result[0]['universidad'];
+		return $result[0];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
@@ -170,7 +163,7 @@ class Usuario{
 	//como listar, pero retorna un array de objetos
 	function listarObj($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
 		$rowsr = array();
-		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, $fields);
+		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, '*');
 		foreach($rows as $row){
 			$obj = clone $this;
 			$obj->cargarPorId($row["idUsuario"]);

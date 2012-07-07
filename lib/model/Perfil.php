@@ -55,6 +55,7 @@ class Perfil{
 			$result = $this->con->query("SELECT * FROM `perfil`  WHERE idPerfil=".$idPerfil);
 			$this->idPerfil = $result[0]['idPerfil'];
 			$this->nombre = $result[0]['nombre'];
+		return $result[0];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
@@ -92,7 +93,7 @@ class Perfil{
 	//como listar, pero retorna un array de objetos
 	function listarObj($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
 		$rowsr = array();
-		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, $fields);
+		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, '*');
 		foreach($rows as $row){
 			$obj = clone $this;
 			$obj->cargarPorId($row["idPerfil"]);

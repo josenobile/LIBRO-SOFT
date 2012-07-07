@@ -35,30 +35,6 @@ class Multa{
 	public function getFechaPago(){
 		return $this->fechaPago;
 	}
-	public function getByEjemplar($id_ejemplar){
-		return $this->listarObj(array("id_ejemplar"=>$id_ejemplar));
-	}
-	public function getEjemplar(){
-		$ejemplar = new Ejemplar($this->con);
-		$ejemplar->cargarPorId($this->idEjemplar);
-		return $ejemplar;
-	}
-	public function getByPrestamo($id_prestamo){
-		return $this->listarObj(array("id_prestamo"=>$id_prestamo));
-	}
-	public function getPrestamo(){
-		$prestamo = new Prestamo($this->con);
-		$prestamo->cargarPorId($this->idPrestamo);
-		return $prestamo;
-	}
-	public function getByEstadoMulta($id_estado){
-		return $this->listarObj(array("id_estado"=>$id_estado));
-	}
-	public function getEstadoMulta(){
-		$estado_multa = new EstadoMulta($this->con);
-		$estado_multa->cargarPorId($this->idEstado);
-		return $estado_multa;
-	}
 
 	//Setters
 
@@ -119,6 +95,7 @@ class Multa{
 			$this->idEstado = $result[0]['id_estado'];
 			$this->multa = $result[0]['multa'];
 			$this->fechaPago = $result[0]['fecha_pago'];
+		return $result[0];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
@@ -156,7 +133,7 @@ class Multa{
 	//como listar, pero retorna un array de objetos
 	function listarObj($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
 		$rowsr = array();
-		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, $fields);
+		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, '*');
 		foreach($rows as $row){
 			$obj = clone $this;
 			$obj->cargarPorId($row["idMulta"]);

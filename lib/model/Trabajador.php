@@ -81,6 +81,7 @@ class Trabajador{
 			$this->idTrabajador = $result[0]['idTrabajador'];
 			$this->perfilIdPerfil = $result[0]['Perfil_idPerfil'];
 			$this->usuarioIdUsuario = $result[0]['Usuario_idUsuario'];
+		return $result[0];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
@@ -118,7 +119,7 @@ class Trabajador{
 	//como listar, pero retorna un array de objetos
 	function listarObj($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
 		$rowsr = array();
-		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, $fields);
+		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, '*');
 		foreach($rows as $row){
 			$obj = clone $this;
 			$obj->cargarPorId($row["idTrabajador"]);

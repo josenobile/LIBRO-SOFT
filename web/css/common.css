@@ -48,3 +48,19 @@ table {
 	margin-top:2px;
 	cursor:pointer;
 }
+
+label.valid {
+    background: url("../images/checked.gif") no-repeat scroll 0 0 transparent;
+    margin-left: 0.3em;
+    padding-left: 16px;
+}
+label.error {
+	background:url("../images/unchecked.gif") no-repeat scroll 0 0 transparent;
+	color:red;
+	margin-left:0.3em;
+	padding-left:16px;
+	white-space:nowrap;
+}
+.initial-state {
+	display:none;
+}

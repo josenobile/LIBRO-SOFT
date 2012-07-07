@@ -6,7 +6,7 @@ echo $msg;
 <h1>Libro</h1>
 <input type="button" id="mostrarFormLibro" value="Mostrar Formulario"  />
 <form action="" method="post" enctype="application/x-www-form-urlencoded" id="formularioLibro">
-    <input type="hidden" name="idArea"  />
+    <input type="hidden" name="idLibro"  />
     <table width="200" border="0">
         <tr>
             <td>Titulo</td>
@@ -22,7 +22,9 @@ echo $msg;
         </tr>
         <tr>
             <td>Área de Conocimiento</td>
-            <td><input type="text" name="id_area_conocimiento" id="id_area_conocimiento"  /></td>
+            <td>
+            <input type='hidden' name='id_area_conocimiento' value='' />
+            <input type="text" name="areaAutoCompletar" id="areaAutoCompletar"  /></td>
         </tr>
         <tr>
             <td>Autores</td>
@@ -51,7 +53,9 @@ echo $msg;
         </tr>
         <tr>
             <td>Editorial</td>
-            <td><input type="text" name="id_editorial" id="id_editorial"  /></td>
+            <td>
+            <input type='hidden' name='id_editorial' value='' />
+            <input type="text" name="editorialAutoCompletar" id="editorialAutoCompletar"  /></td>
         </tr>
         <tr>
             <td>Caratula</td>

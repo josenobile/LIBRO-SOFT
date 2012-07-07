@@ -55,6 +55,7 @@ class EstadoMulta{
 			$result = $this->con->query("SELECT * FROM `estado_multa`  WHERE idEstado_Multa=".$idEstado_Multa);
 			$this->idEstadoMulta = $result[0]['idEstado_Multa'];
 			$this->estado = $result[0]['estado'];
+		return $result[0];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
@@ -92,7 +93,7 @@ class EstadoMulta{
 	//como listar, pero retorna un array de objetos
 	function listarObj($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
 		$rowsr = array();
-		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, $fields);
+		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, '*');
 		foreach($rows as $row){
 			$obj = clone $this;
 			$obj->cargarPorId($row["idEstado_Multa"]);

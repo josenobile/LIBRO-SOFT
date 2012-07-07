@@ -10,6 +10,10 @@ class Libro{
 	private $idEditorial;
 	private $caratula;
 	private $archivo;
+	private $caratulaSize;
+	private $caratulaContentType;
+	private $archivoSize;
+	private $archivoContentType;
 	private $fechaIngreso;
 	protected $con;
 	public function __construct(){
@@ -52,16 +56,20 @@ class Libro{
 	public function getArchivo(){
 		return $this->archivo;
 	}
+	public function getCaratulaSize(){
+		return $this->caratulaSize;
+	}
+	public function getCaratulaContentType(){
+		return $this->caratulaContentType;
+	}
+	public function getArchivoSize(){
+		return $this->archivoSize;
+	}
+	public function getArchivoContentType(){
+		return $this->archivoContentType;
+	}
 	public function getFechaIngreso(){
 		return $this->fechaIngreso;
-	}
-	public function getByEditorial($id_editorial){
-		return $this->listarObj(array("id_editorial"=>$id_editorial));
-	}
-	public function getEditorial(){
-		$editorial = new Editorial($this->con);
-		$editorial->cargarPorId($this->idEditorial);
-		return $editorial;
 	}
 	public function getByArea($id_area_conocimiento){
 		return $this->listarObj(array("id_area_conocimiento"=>$id_area_conocimiento));
@@ -70,6 +78,14 @@ class Libro{
 		$area = new Area($this->con);
 		$area->cargarPorId($this->idAreaConocimiento);
 		return $area;
+	}
+	public function getByEditorial($id_editorial){
+		return $this->listarObj(array("id_editorial"=>$id_editorial));
+	}
+	public function getEditorial(){
+		$editorial = new Editorial($this->con);
+		$editorial->cargarPorId($this->idEditorial);
+		return $editorial;
 	}
 
 	//Setters
@@ -104,6 +120,18 @@ class Libro{
 	public function setArchivo($archivo){
 		$this->archivo = $archivo;
 	}
+	public function setCaratulaSize($caratulaSize){
+		$this->caratulaSize = $caratulaSize;
+	}
+	public function setCaratulaContentType($caratulaContentType){
+		$this->caratulaContentType = $caratulaContentType;
+	}
+	public function setArchivoSize($archivoSize){
+		$this->archivoSize = $archivoSize;
+	}
+	public function setArchivoContentType($archivoContentType){
+		$this->archivoContentType = $archivoContentType;
+	}
 	public function setFechaIngreso($fechaIngreso){
 		$this->fechaIngreso = $fechaIngreso;
 	}
@@ -129,6 +157,10 @@ class Libro{
 			"id_editorial" => $this->idEditorial,
 			"caratula" => $this->caratula,
 			"archivo" => $this->archivo,
+			"caratula_size" => $this->caratulaSize,
+			"caratula_content_type" => $this->caratulaContentType,
+			"archivo_size" => $this->archivoSize,
+			"archivo_content_type" => $this->archivoContentType,
 			"fecha_ingreso" => $this->fechaIngreso,
 			),"libro");
 			return;
@@ -143,6 +175,10 @@ class Libro{
 			"id_editorial" => $this->idEditorial,
 			"caratula" => $this->caratula,
 			"archivo" => $this->archivo,
+			"caratula_size" => $this->caratulaSize,
+			"caratula_content_type" => $this->caratulaContentType,
+			"archivo_size" => $this->archivoSize,
+			"archivo_content_type" => $this->archivoContentType,
 			"fecha_ingreso" => $this->fechaIngreso,
 			),"libro","idLibro=".$this->getId());
 	}
@@ -160,7 +196,12 @@ class Libro{
 			$this->idEditorial = $result[0]['id_editorial'];
 			$this->caratula = $result[0]['caratula'];
 			$this->archivo = $result[0]['archivo'];
+			$this->caratulaSize = $result[0]['caratula_size'];
+			$this->caratulaContentType = $result[0]['caratula_content_type'];
+			$this->archivoSize = $result[0]['archivo_size'];
+			$this->archivoContentType = $result[0]['archivo_content_type'];
 			$this->fechaIngreso = $result[0]['fecha_ingreso'];
+		return $result[0];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
@@ -198,7 +239,7 @@ class Libro{
 	//como listar, pero retorna un array de objetos
 	function listarObj($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
 		$rowsr = array();
-		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, $fields);
+		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, '*');
 		foreach($rows as $row){
 			$obj = clone $this;
 			$obj->cargarPorId($row["idLibro"]);

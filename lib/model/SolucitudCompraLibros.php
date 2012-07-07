@@ -39,22 +39,6 @@ class SolucitudCompraLibros{
 	public function getFechaSolicitud(){
 		return $this->fechaSolicitud;
 	}
-	public function getByUsuario($id_usuario){
-		return $this->listarObj(array("id_usuario"=>$id_usuario));
-	}
-	public function getUsuario(){
-		$usuario = new Usuario($this->con);
-		$usuario->cargarPorId($this->idUsuario);
-		return $usuario;
-	}
-	public function getByEstadoSolicitudCompra($estado){
-		return $this->listarObj(array("estado"=>$estado));
-	}
-	public function getEstadoSolicitudCompra(){
-		$estado_solicitud_compra = new EstadoSolicitudCompra($this->con);
-		$estado_solicitud_compra->cargarPorId($this->estado);
-		return $estado_solicitud_compra;
-	}
 
 	//Setters
 
@@ -121,6 +105,7 @@ class SolucitudCompraLibros{
 			$this->descripcion = $result[0]['descripcion'];
 			$this->titulo = $result[0]['titulo'];
 			$this->fechaSolicitud = $result[0]['fecha_solicitud'];
+		return $result[0];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
@@ -158,7 +143,7 @@ class SolucitudCompraLibros{
 	//como listar, pero retorna un array de objetos
 	function listarObj($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
 		$rowsr = array();
-		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, $fields);
+		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, '*');
 		foreach($rows as $row){
 			$obj = clone $this;
 			$obj->cargarPorId($row["idSolucitud_Compra_Libros"]);

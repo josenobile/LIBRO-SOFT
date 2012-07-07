@@ -31,22 +31,6 @@ class Descargas{
 	public function getFecha(){
 		return $this->fecha;
 	}
-	public function getByUsuario($Usuario_idUsuario){
-		return $this->listarObj(array("Usuario_idUsuario"=>$Usuario_idUsuario));
-	}
-	public function getUsuario(){
-		$usuario = new Usuario($this->con);
-		$usuario->cargarPorId($this->usuarioIdUsuario);
-		return $usuario;
-	}
-	public function getByLibro($Libro_idLibro){
-		return $this->listarObj(array("Libro_idLibro"=>$Libro_idLibro));
-	}
-	public function getLibro(){
-		$libro = new Libro($this->con);
-		$libro->cargarPorId($this->libroIdLibro);
-		return $libro;
-	}
 
 	//Setters
 
@@ -101,6 +85,7 @@ class Descargas{
 			$this->usuarioIdUsuario = $result[0]['Usuario_idUsuario'];
 			$this->libroIdLibro = $result[0]['Libro_idLibro'];
 			$this->fecha = $result[0]['fecha'];
+		return $result[0];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
@@ -138,7 +123,7 @@ class Descargas{
 	//como listar, pero retorna un array de objetos
 	function listarObj($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
 		$rowsr = array();
-		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, $fields);
+		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, '*');
 		foreach($rows as $row){
 			$obj = clone $this;
 			$obj->cargarPorId($row["idDescargas"]);

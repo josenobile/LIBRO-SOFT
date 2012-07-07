@@ -93,6 +93,7 @@ class Profesor{
 			$this->dependencia = $result[0]['dependencia'];
 			$this->titulo = $result[0]['titulo'];
 			$this->áreasInterés = $result[0]['áreas_interés'];
+		return $result[0];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
@@ -130,7 +131,7 @@ class Profesor{
 	//como listar, pero retorna un array de objetos
 	function listarObj($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
 		$rowsr = array();
-		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, $fields);
+		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, '*');
 		foreach($rows as $row){
 			$obj = clone $this;
 			$obj->cargarPorId($row["idProfesor"]);

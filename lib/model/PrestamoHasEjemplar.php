@@ -23,22 +23,6 @@ class PrestamoHasEjemplar{
 	public function getEjemplarIdEjemplar(){
 		return $this->ejemplarIdEjemplar;
 	}
-	public function getByPrestamo($Prestamo_idPrestamo){
-		return $this->listarObj(array("Prestamo_idPrestamo"=>$Prestamo_idPrestamo));
-	}
-	public function getPrestamo(){
-		$prestamo = new Prestamo($this->con);
-		$prestamo->cargarPorId($this->prestamoIdPrestamo);
-		return $prestamo;
-	}
-	public function getByEjemplar($Ejemplar_idEjemplar){
-		return $this->listarObj(array("Ejemplar_idEjemplar"=>$Ejemplar_idEjemplar));
-	}
-	public function getEjemplar(){
-		$ejemplar = new Ejemplar($this->con);
-		$ejemplar->cargarPorId($this->ejemplarIdEjemplar);
-		return $ejemplar;
-	}
 
 	//Setters
 
@@ -81,6 +65,7 @@ class PrestamoHasEjemplar{
 			$this->idPrestamoEjemplar = $result[0]['idPrestamo_Ejemplar'];
 			$this->prestamoIdPrestamo = $result[0]['Prestamo_idPrestamo'];
 			$this->ejemplarIdEjemplar = $result[0]['Ejemplar_idEjemplar'];
+		return $result[0];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
@@ -118,7 +103,7 @@ class PrestamoHasEjemplar{
 	//como listar, pero retorna un array de objetos
 	function listarObj($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
 		$rowsr = array();
-		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, $fields);
+		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, '*');
 		foreach($rows as $row){
 			$obj = clone $this;
 			$obj->cargarPorId($row["idPrestamo_Ejemplar"]);

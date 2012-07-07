@@ -23,14 +23,6 @@ class Estudiante{
 	public function getIdCarrera(){
 		return $this->idCarrera;
 	}
-	public function getByCarrera($id_carrera){
-		return $this->listarObj(array("id_carrera"=>$id_carrera));
-	}
-	public function getCarrera(){
-		$carrera = new Carrera($this->con);
-		$carrera->cargarPorId($this->idCarrera);
-		return $carrera;
-	}
 	public function getByUsuario($Usuario_idUsuario){
 		return $this->listarObj(array("Usuario_idUsuario"=>$Usuario_idUsuario));
 	}
@@ -38,6 +30,14 @@ class Estudiante{
 		$usuario = new Usuario($this->con);
 		$usuario->cargarPorId($this->usuarioIdUsuario);
 		return $usuario;
+	}
+	public function getByCarrera($id_carrera){
+		return $this->listarObj(array("id_carrera"=>$id_carrera));
+	}
+	public function getCarrera(){
+		$carrera = new Carrera($this->con);
+		$carrera->cargarPorId($this->idCarrera);
+		return $carrera;
 	}
 
 	//Setters
@@ -81,6 +81,7 @@ class Estudiante{
 			$this->idEstudiante = $result[0]['idEstudiante'];
 			$this->usuarioIdUsuario = $result[0]['Usuario_idUsuario'];
 			$this->idCarrera = $result[0]['id_carrera'];
+		return $result[0];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
@@ -118,7 +119,7 @@ class Estudiante{
 	//como listar, pero retorna un array de objetos
 	function listarObj($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
 		$rowsr = array();
-		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, $fields);
+		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, '*');
 		foreach($rows as $row){
 			$obj = clone $this;
 			$obj->cargarPorId($row["idEstudiante"]);

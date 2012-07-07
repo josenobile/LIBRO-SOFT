@@ -2,21 +2,34 @@
 $(function() {
 	
     // Agregar al boton de mostrar el formulario la opcion de ocultar y mostrar
-    $("#mostrarFormArea").bind("click", function() {
-        if ($("#formularioArea").css("display") == "none") {
-            $("#formularioArea").slideDown();
+    $("#mostrarFormLibro").bind("click", function() {
+        if ($("#formularioLibro").css("display") == "none") {
+            $("#formulariLibro").slideDown();
         } else {
-            $("#formularioArea").slideUp();
+            $("#formularioLibro").slideUp();
         }
     });
 
     
     //Autocompletar de Area de Conocimiento
-	$("#id_area_conocimiento").autocomplete("index.php?ac=libro&autoCompleteTerm=area",{
+	$("#areaAutoCompletar").autocomplete("index.php?ac=libro&autoCompleteTerm=area",{
 		minChars: 1,
+                parse: function(data) {
+                        data = jQuery.parseJSON(data);
+			return $.map(data, function(row) {
+                                return {
+					data: [row.area, row.idArea],
+					value: row.area,
+					result: row.area
+				}
+			});
+		},
 		max: 1000,
 		delay: 0
-	}).addClass("autocomplete");
+	}).addClass("autocomplete").bind("result", function(e, row, nombre ){
+		$('input:hidden').filter('[name=id_area_conocimiento]').val(row[1]);
+		//$("<input type='hidden' name='id_area_conocimiento' value='"+row[1]+"' />").insertBefore($("#areaAutoCompletar"));
+	});
 	
     //Autocompletar de Autor
 	$("#autoautor").autocomplete("index.php?ac=libro&autoCompleteTerm=nombre",{
@@ -44,12 +57,24 @@ $(function() {
 	});
 	
     //Autocompletar de Editorial
-	$("#id_editorial").autocomplete("index.php?ac=libro&autoCompleteTerm=editorial",{
+	$("#editorialAutoCompletar").autocomplete("index.php?ac=libro&autoCompleteTerm=editorial",{
 		minChars: 1,
+                parse: function(data) {
+                        data = jQuery.parseJSON(data);
+			return $.map(data, function(row) {
+                                return {
+					data: [row.editorial, row.idEditorial],
+					value: row.editorial,
+					result: row.editorial
+				}
+			});
+		},
 		max: 1000,
 		delay: 0
-	}).addClass("autocomplete");
-
+	}).addClass("autocomplete").bind("result", function(e, row, nombre ){
+		$('input:hidden').filter('[name=id_editorial]').val(row[1]);
+		//$("<input type='hidden' name='id_editorial' value='"+row[1]+"' />").insertBefore($("#editorialAutoCompletar"));
+	});
     
     // Validar los campos del formulario, enviarlo por ajax y actulizar la
     // tabla!!
@@ -57,8 +82,11 @@ $(function() {
     .validate(
     {
         rules : {
-            //area : {required : true},
-            
+            titulo : {required : true},
+			ISBN : {required : true},
+			areaAutoCompletar : {required: true},
+			idioma : {required : true},
+			palabras_claves : {required : true}            
         },
         messages : {
         // varName: {required: "Este campo es requerido"},
@@ -94,18 +122,18 @@ $(function() {
     });
 
     // Agregar la funcion a los cositos de editar para que funcionen aJAX
-    $(".editarArea").live("click", function(e) {// edit
+    $(".editarLibro").live("click", function(e) {// edit
         e.preventDefault();
         // var arr = {};
         // parse_str($(this).attr("href").substr(1),arr);
         $("#result").html("Loading");
-        $("#formularioArea").hide();
+        $("#formularioLibro").hide();
         $.get($(this).attr("href"), function(obj) {
             for (i in obj) {
-                $("#formularioArea *[name=" + i + "]").val(obj[i]);
+                $("#formularioLibro *[name=" + i + "]").val(obj[i]);
             }
             $("#result").html("");
-            $("#formularioArea").slideDown();
+            $("#formularioLibro").slideDown();
         // $("#result").html(obj.msg);
         // tLaeOfficeExpenses.fnClearTable(true);//uncomment
         }, "json");
@@ -113,12 +141,12 @@ $(function() {
     });
 
     //Eliminar por AJAX con confirmacion
-    $(".eliminarArea").live("click", function(e) {// delete
+    $(".eliminarLibro").live("click", function(e) {// delete
         e.preventDefault();
         if (confirm("Are you sure? Delete?")) {
             $.get($(this).attr("href"), function(obj) {
                 $("#result").html(obj.msg);
-                tArea.fnClearTable(true);// uncomment
+                tLibro.fnClearTable(true);// uncomment
             }, "json");
         }
 
@@ -126,7 +154,7 @@ $(function() {
     });
 
     // Utilizando el plugine Jquery DataTable para hacer el consultar AJAX
-    var tArea = $('#tLibro')
+    var tLibro = $('#tLibro')
     .dataTable(
     {
         "bProcessing" : true,
@@ -150,10 +178,10 @@ $(function() {
             "bSortable" : false,
             "mDataProp" : null,
             "fnRender" : function(o) {
-                return '<div style="display:block; width:120px;"><a class="editarArea" href="index.php?ac=area&accion=editar&id='
+                return '<div style="display:block; width:120px;"><a class="editarLibro" href="index.php?ac=libro&accion=editar&id='
                 + o.aData[0]
                 + '">Editar</a> '
-                + '<a class="eliminarArea" href="index.php?ac=area&accion=eliminar&id='
+                + '<a class="eliminarLibro" href="index.php?ac=libro&accion=eliminar&id='
                 + o.aData[0]
                 + '">Eliminar</a></div>';
             }

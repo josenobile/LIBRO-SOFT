@@ -23,22 +23,6 @@ class LibroAutor{
 	public function getIdAutor(){
 		return $this->idAutor;
 	}
-	public function getByLibro($id_libro){
-		return $this->listarObj(array("id_libro"=>$id_libro));
-	}
-	public function getLibro(){
-		$libro = new Libro($this->con);
-		$libro->cargarPorId($this->idLibro);
-		return $libro;
-	}
-	public function getByAutor($id_autor){
-		return $this->listarObj(array("id_autor"=>$id_autor));
-	}
-	public function getAutor(){
-		$autor = new Autor($this->con);
-		$autor->cargarPorId($this->idAutor);
-		return $autor;
-	}
 
 	//Setters
 
@@ -81,6 +65,7 @@ class LibroAutor{
 			$this->idLibroAutor = $result[0]['idLibro_Autor'];
 			$this->idLibro = $result[0]['id_libro'];
 			$this->idAutor = $result[0]['id_autor'];
+		return $result[0];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
@@ -118,7 +103,7 @@ class LibroAutor{
 	//como listar, pero retorna un array de objetos
 	function listarObj($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
 		$rowsr = array();
-		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, $fields);
+		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, '*');
 		foreach($rows as $row){
 			$obj = clone $this;
 			$obj->cargarPorId($row["idLibro_Autor"]);

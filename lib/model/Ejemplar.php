@@ -121,6 +121,7 @@ class Ejemplar{
 			$this->numeroPasillo = $result[0]['numero_pasillo'];
 			$this->estante = $result[0]['estante'];
 			$this->numeroCajon = $result[0]['numero_cajon'];
+		return $result[0];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
@@ -158,7 +159,7 @@ class Ejemplar{
 	//como listar, pero retorna un array de objetos
 	function listarObj($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
 		$rowsr = array();
-		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, $fields);
+		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, '*');
 		foreach($rows as $row){
 			$obj = clone $this;
 			$obj->cargarPorId($row["idEjemplar"]);

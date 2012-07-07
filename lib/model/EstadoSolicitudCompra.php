@@ -55,6 +55,7 @@ class EstadoSolicitudCompra{
 			$result = $this->con->query("SELECT * FROM `estado_solicitud_compra`  WHERE idEstado_Solicitud_Compra=".$idEstado_Solicitud_Compra);
 			$this->idEstadoSolicitudCompra = $result[0]['idEstado_Solicitud_Compra'];
 			$this->estado = $result[0]['estado'];
+		return $result[0];
 		}
  	}
 	public function listar($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
@@ -92,7 +93,7 @@ class EstadoSolicitudCompra{
 	//como listar, pero retorna un array de objetos
 	function listarObj($filtros = array(), $orderBy = '', $limit = "0,30", $exactMatch = false, $fields = '*'){
 		$rowsr = array();
-		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, $fields);
+		$rows = $this->listar($filtros, $orderBy, $limit, $exactMatch, '*');
 		foreach($rows as $row){
 			$obj = clone $this;
 			$obj->cargarPorId($row["idEstado_Solicitud_Compra"]);
