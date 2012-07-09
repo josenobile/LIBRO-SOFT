@@ -16,6 +16,7 @@
         <script type="text/javascript" src="web/javascript/jquery.inputautoresize.js"></script>
         <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
         <link rel="stylesheet" type="text/css" href="web/javascript/DataTables-1.9.1/media/css/demo_table_jui.css" />
+        <script type="text/javascript" src="http://jqueryui.com/themeroller/themeswitchertool/"></script>
         <script type="application/javascript" src="web/javascript/DataTables-1.9.1/media/js/jquery.dataTables.min.js"></script>
         <script type="application/javascript" src="web/javascript/DataTables-1.9.1/extras/Scroller/media/js/Scroller.min.js"></script>
         <script type="application/javascript" src="web/javascript/DataTables-1.9.1/extras/ColumnFilter/jquery.dataTables.columnFilter.js"></script>
@@ -27,11 +28,14 @@
     </head>
 
     <body>
+        <div id="menu">&nbsp;
         <ul>
-            <li><a href="./">Home</a></li>
+            <li><a href="./?ac">Home</a></li>
             <li><a href="?ac=area">Area</a></li>
             <li><a href="?ac=libro">Libro</a></li>
         </ul>
+        <br /><br /><br /><br />
+        </div>
 
         <div id="content">
             <?php $this->output('content') ?>

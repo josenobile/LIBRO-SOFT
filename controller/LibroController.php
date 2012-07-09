@@ -63,7 +63,19 @@ class LibroController {
         $this->libro->setValues($_POST);
         //asignarle la fecha de ingreso (fecha hora actual)
         $this->libro->setFechaIngreso(date("Y-m-d H:i:s"));
-        //revisar si cargo la caratural y/o el libro para guardarlos
+        //Revisar si desea borrar la caratula
+        if($_POST["borrarCaratula"] != ''){
+        	$this->libro->setCaratulaSize(NULL);
+        	$this->libro->setCaratulaContentType(NULL);
+        	$this->libro->setCaratula(NULL);
+        }
+        //Revisar si desea borrar el Libro
+        if($_POST["borrarArchivo"] != ''){
+        	$this->libro->setArchivoSize(NULL);
+        	$this->libro->setArchivoContentType(NULL);
+        	$this->libro->setArchivo(NULL);
+        }
+        //revisar si cargo la caratula y/o el libro para guardarlos
         if (file_exists($_FILES["caratula"]["tmp_name"])) {
             $this->libro->setCaratulaSize($_FILES["caratula"]["size"]);
             $this->libro->setCaratulaContentType($_FILES["caratula"]["type"]);
@@ -81,6 +93,11 @@ class LibroController {
         }
         //Guardo el Libro
         $this->libro->save();
+        //Limpiar los anteriores autores relacionados
+        $libroAutorObjs = (new LibroAutor())
+        ->listarObj(array("id_libro" => $this->libro->getId()), "id_autor", "0,30", true);
+        foreach($libroAutorObjs as $libroAutor)
+        	$libroAutor->eliminar();
         //Se guarda las relaciones muchos a muchos de Libro y Autor
         foreach ($_POST["idAutor"] as $idAutor) {
             $libroAutor = new LibroAutor();
@@ -104,9 +121,10 @@ class LibroController {
         foreach($libroAutorObjs as $libroAutor){
         	$autor = new Autor();
         	$autor->cargarPorId($libroAutor->getIdAutor());
-        	$autores[$libroAutor->getIdAutor()] = $autor->getPrimerApellido();
+        	$autores[$libroAutor->getIdAutor()] = $autor->getPrimerApellido()." ".$autor->getSegundoApellido()." ".$autor->getPrimerNombre()." ".$autor->getSegundoNombre();
         }
-        $this->aParams["libro"] = array("idLibro" => $this->libro->getId(),
+        $this->aParams["libro"] = array(
+        	"idLibro" => $this->libro->getId(),
             "ISBN" => $this->libro->getISBN(),
             "titulo" => $this->libro->getTitulo(),
             "año_publicación" => $this->libro->getAñoPublicación(),
@@ -117,7 +135,7 @@ class LibroController {
             "id_editorial" => $this->libro->getEditorial()->getId(),
             "editorialAutoCompletar" => $this->libro->getEditorial()
                     ->geteditorial(),
-            "autores" => $this->libro->getEditorial()->geteditorial());
+            "autores" => $autores);
     }
 
     private function eliminar($id) {

@@ -28,4 +28,21 @@ $(function() {
 
 	// efecto zebra estatico
 	$("table tr:even").addClass("alt");
+	
+	$.fn.themeswitcher && $('<div/>').css({
+		position: "absolute",
+		right: 10,
+		top: 10
+	}).appendTo(document.body).themeswitcher();
+	$.validator.setDefaults({
+		highlight: function(input) {
+			$(input).addClass("ui-state-highlight");
+		},
+		unhighlight: function(input) {
+			$(input).removeClass("ui-state-highlight");
+		}
+	});
+	$("button, input:submit, input:reset, input:button, a[href*='\\?ac']").button();
+		//$j("table.ui-widget").css("font-size", "14px");
+	$("input:text:not(.ui-corner-all), select:not(.ui-corner-all), textarea:not(.ui-corner-all)").addClass("text ui-widget-content ui-corner-all");
 });

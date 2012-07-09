@@ -4,7 +4,7 @@ $(function() {
     // Agregar al boton de mostrar el formulario la opcion de ocultar y mostrar
     $("#mostrarFormLibro").bind("click", function() {
         if ($("#formularioLibro").css("display") == "none") {
-            $("#formulariLibro").slideDown();
+            $("#formularioLibro").slideDown();
         } else {
             $("#formularioLibro").slideUp();
         }
@@ -47,7 +47,7 @@ $(function() {
 		max: 1000,
 		delay: 0
 	}).addClass("autocomplete").bind("result", function(e, row, nombre ){
-		$("<input type='hidden' name='idAutor[]' value='"+row[1]+"' />").insertBefore($("#autoautor"));
+		$("<input class='hiddensAutor'  type='hidden' name='idAutor[]' value='"+row[1]+"' />").insertBefore($("#autoautor"));
 		$("<span class='labelAutor'>"+nombre+"<span class='closeAutoAutor'></span></span>").appendTo("#autores").
 		find(".closeAutoAutor").data("id", row[1]).bind("click", function(){
 			$('input:hidden').filter('[value="'+$(this).data("id")+'"]').remove();
@@ -105,6 +105,11 @@ $(function() {
                     // $("input[name=id]").val(obj.id);
                     // $(form).clearForm();
                     $('[name]', form).val('');
+					$(".labelAutor").remove();
+					$('input:hidden').filter(".hiddensAutor").remove();
+					$("#autores").html("");
+					$("#downloadCaratula, #borrarCaratula").remove();
+					$("#downloadArchivo, #borrarArchivo").remove();
                 },
                 beforeSubmit : function(arr, $form, options) {
                     $("#result")
@@ -132,6 +137,19 @@ $(function() {
             for (i in obj) {
                 $("#formularioLibro *[name=" + i + "]").val(obj[i]);
             }
+			//Regenerar los autores seleccionados en modo autocompletar
+			$(".labelAutor").remove();
+			$('input:hidden').filter(".hiddensAutor").remove();
+			$("#autores").html("");
+			for (j in obj["autores"]){
+				$("#autoautor").triggerHandler("result", [[obj["autores"][j], j], obj["autores"][j]]);
+			}
+			//Manejo de la edición de los archivos (libro y caratula)
+			$("#downloadCaratula, #borrarCaratula").remove();
+			$("#downloadArchivo, #borrarArchivo").remove();
+			$("input[name=caratula]").after("<a target='_blank' id='downloadCaratula' href='controller/loadDocumentCaratula.php?id="+obj["idLibro"]+"'>Download</a> <span id='borrarCaratula'>Borrar Caratula<input type='checkbox' name='borrarCaratula' /></span<");
+			$("input[name=archivo]").after("<a target='_blank' id='downloadArchivo' href='controller/loadDocumentLibro.php?id="+obj["idLibro"]+"'>Download</a> <span id='borrarArchivo'>Borrar Archivo<input type='checkbox' name='borrarArchivo' /></span>");
+			
             $("#result").html("");
             $("#formularioLibro").slideDown();
         // $("#result").html(obj.msg);
